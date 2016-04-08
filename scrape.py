@@ -9,6 +9,7 @@ prof_id = '207105'
 
 for i in range(1):
 	print '\nID'
+	print '-------------------------'
 	print prof_id
 	driver.get(url % prof_id)
 	soup = BeautifulSoup(driver.page_source)
@@ -17,79 +18,100 @@ for i in range(1):
 	prof_id = re.search(r'ProfileNav_prevProfLink.*?profid=([0-9]+)', driver.page_source.replace('\n', '')).group(1)
 
 	#extract full name
-	name = re.search(r'(?:Dr\. )?([A-Za-z\. -]+),?', soup.title.string).group(1)
 	print '\nNAME'
+	print '-------------------------'
+	name = re.search(r'(?:Dr\. )?([A-Za-z\. -]+),?', soup.title.string).group(1)
 	print name
 
 	#extract description paragraph
+	print '\nSUMMARY'
+	print '-------------------------'
 	summary= soup.find('div', {'class' : 'section profile-personalstatement'})
 	summary = re.sub("[ \t\n]+"," ", str(summary).strip())
 	statements = [summary_i.strip() for summary_i in summary.replace('<div class="section profile-personalstatement"> ', '').replace('</div>', '').split('<div class="statementPara"> ')[1:]]
-	print '\nSUMMARY'
-	print '-------------------------'
 	print ' '.join(statements)
 
 	#extract phone number
-	phone = re.search(r'(?:<a href=\"tel:([0-9]+))', driver.page_source.replace('\n', '')).group(1)
 	print '\nPHONE'
 	print '-------------------------'
+	phone = re.search(r'(?:<a href=\"tel:([0-9]+))', driver.page_source.replace('\n', '')).group(1)
 	print phone
 
 	#extract location
-	streetAddress = soup.find('span', {'itemprop': 'streetAddress'}).text
-	zipCode = soup.find('span', {'itemprop': 'postalcode'}).text
 	print '\nLOCATION'
 	print '-------------------------'
+	streetAddress = soup.find('span', {'itemprop': 'streetAddress'}).text
+	zipCode = soup.find('span', {'itemprop': 'postalcode'}).text
 	print streetAddress, zipCode
 
 	#extract specialties
-	specialties = soup.findAll('li', {'class':"highlight"})
 	print '\nSPECIALTIES'
 	print '-------------------------'
-	for hit in specialties:
-		print hit.text
+	for li in soup.findAll('li', {'class':"highlight"}):
+		print li.text
 
-	#extract issues/mental health/sexuality focuses
+	#extract issues focus
 	print '\nISSUES'
 	print '-------------------------'
-	issues = soup.findAll('div', {'class':"col-xs-12 col-sm-12 col-md-6 col-lg-6"})
-	for hit in issues:
-		for li in hit.findAll('li'):
-			print li.text
+	text = re.search(r'Issues.*?<h3 class="spec-subcat">', driver.page_source.replace('\n', '')).group(0)
+	text = BeautifulSoup(text)
+	for li in text.findAll('li'):
+		print li.text
+
+	#extract mental health focus
+	print '\nMENTAL HEALTH'
+	print '-------------------------'
+	text = re.search(r'Mental Health.*?<h3 class="spec-subcat">', driver.page_source.replace('\n', '')).group(0)
+	text = BeautifulSoup(text)
+	for li in text.findAll('li'):
+		print li.text
+
+	#extract sexuality focus
+	print '\nSEXUALITY'
+	print '-------------------------'
+	text = re.search(r'Sexuality.*?<div class="spec-list">', driver.page_source.replace('\n', '')).group(0)
+	text = BeautifulSoup(text)
+	for li in text.findAll('li'):
+		print li.text
+
+	#extract categories
+	print '\nCATEGORIES'
+	print '-------------------------'
+	text = re.search(r'Categories.*?<div class="spec-list">', driver.page_source.replace('\n', '')).group(0)
+	text = BeautifulSoup(text)
+	for li in text.findAll('li'):
+		print li.text
+	#extract languages other than english
+	print '\nLANGUAGES'
+	print '-------------------------'
+	text = re.search(r'Alternative Languages.*?<h3 class="spec-subcat">', driver.page_source.replace('\n', '')).group(0)
+	text = BeautifulSoup(text)
+	for s in text.findAll('span'):
+		print s.text.replace(',', '')
 
 	#extract treatment approach
 	print '\nTREATMENT ORIENTATION'
 	print '-------------------------'
-	text = re.search(r'Treatment Orientation.*<h3 class="spec-subcat">', driver.page_source.replace('\n', '')).group(0)
+	text = re.search(r'Treatment Orientation.*?<h3 class="spec-subcat">', driver.page_source.replace('\n', '')).group(0)
 	text = BeautifulSoup(text)
-	#print text
-	treatments = text.findAll('button', {'class':"ui-button glossary-button"})
-	for treatment in treatments:
-		print treatment.text
+	for b in text.findAll('button', {'class':"ui-button glossary-button"}):
+		print b.text
 
 	#extract modality
 	print '\nMODALITY'
 	print '-------------------------'
 	text = re.search(r'Modality.*?</div>', driver.page_source.replace('\n', '')).group(0)
 	text = BeautifulSoup(text)
-	for m in text.findAll('li'):
-		print m.text
+	for li in text.findAll('li'):
+		print li.text
 
-
+	#extract insurance providers
 	print '\nINSURANCE'
 	print '-------------------------'
 	text = re.search(r'Accepted Insurance Plans.*?<div class="profile-verify-ins">', driver.page_source.replace('\n', '')).group(0)
 	text = BeautifulSoup(text)
-	for i in text.findAll('li'):
-		print i.text
-
-
-	print '\nLANGUAGES'
-	print '-------------------------'
-	text = re.search(r'Alternative Languages.*?<h3 class="spec-subcat">', driver.page_source.replace('\n', '')).group(0)
-	text = BeautifulSoup(text)
-	for i in text.findAll('span'):
-		print i.text.replace(',', '')
+	for li in text.findAll('li'):
+		print li.text
 
 
 	print "\n*********************************************"
