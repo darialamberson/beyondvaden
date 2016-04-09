@@ -6,13 +6,18 @@ from time import sleep
 driver = webdriver.PhantomJS()
 
 url = 'https://therapists.psychologytoday.com/rms/prof_detail.php?profid=%s&sid=1459550134.2557_26010&zipcode=94305&search=94305&tr=NextProf'
-prof_id = '207105' #Savant
+prof_start_id = '207105'#Savant
+prof_id = prof_start_id
+num_profiles = 1 #controls how many therapist profiles we want to scrape
+
 #prof_id = '95997' #Choy
 #prof_id = '35139' #Truong
-stop_flag = 0
+#prof_id = '69009' #May
+#prof_id = '66434' #Schellenberg
 
-for i in range(10): #controls how many therapist profiles we want to scrape
-	if stop_flag:
+for i in range(num_profiles):
+	#case we have wrapped back around so we're done
+	if prof_id == prof_start_id && i > 0:
 		break
 
 	print '\nID'
@@ -23,11 +28,7 @@ for i in range(10): #controls how many therapist profiles we want to scrape
 	#print soup.prettify()
 
 	#extract the profile linked to by the "next" button (for use the next time through the loop)
-	try:
-		prof_id = re.search(r'ProfileNav_prevProfLink.*?profid=([0-9]+)', driver.page_source.replace('\n', '')).group(1)
-	except:
-		#case there are no more therapists to process after this one
-		stop_flag = 1
+	prof_id = re.search(r'ProfileNav_prevProfLink.*?profid=([0-9]+)', driver.page_source.replace('\n', '')).group(1)
 
 	#extract full name
 	print '\nNAME'
@@ -73,7 +74,8 @@ for i in range(10): #controls how many therapist profiles we want to scrape
 	print '\nSPECIALTIES'
 	print '-------------------------'
 	for li in soup.findAll('li', {'class':"highlight"}):
-		print li.text
+		x = re.sub('[^0-9a-zA-Z ,-:]+', '', li.text)
+		print x
 
 	#extract issues focus
 	print '\nISSUES'
@@ -87,7 +89,7 @@ for i in range(10): #controls how many therapist profiles we want to scrape
 	#extract mental health focus
 	print '\nMENTAL HEALTH'
 	print '-------------------------'
-	text = re.search(r'Mental Health.*?<h3 class="spec-subcat">', driver.page_source.replace('\n', ''))
+	text = re.search(r'Mental Health.*?<h', driver.page_source.replace('\n', ''))
 	if text:
 		text = BeautifulSoup(text.group(0))
 		for li in text.findAll('li'):
@@ -150,6 +152,6 @@ for i in range(10): #controls how many therapist profiles we want to scrape
 
 	print "\n*********************************************"
 
-	sleep(3)
+	sleep(3) #to be polite to their servers/behave more like a real client
 
 driver.quit()
