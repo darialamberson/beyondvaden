@@ -17,7 +17,7 @@ num_profiles = 1 #controls how many therapist profiles we want to scrape
 
 for i in range(num_profiles):
 	#case we have wrapped back around so we're done
-	if prof_id == prof_start_id && i > 0:
+	if prof_id == prof_start_id and i > 0:
 		break
 
 	print '\nID'
