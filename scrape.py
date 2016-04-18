@@ -1,14 +1,22 @@
 from selenium import webdriver
 from BeautifulSoup import BeautifulSoup
 import re
+import os
 from time import sleep
 
-driver = webdriver.PhantomJS()
+import sqlite3
+import db_connector as db
+
+driver = webdriver.PhantomJS(os.path.join(os.getcwd(), 'bin/phantomjs'))
 
 url = 'https://therapists.psychologytoday.com/rms/prof_detail.php?profid=%s&sid=1459550134.2557_26010&zipcode=94305&search=94305&tr=NextProf'
-prof_start_id = '207105'#Savant
+prof_start_id = '207105' #Savant--maybe we should add in other zip codes?
 prof_id = prof_start_id
-num_profiles = 1 #controls how many therapist profiles we want to scrape
+num_profiles = 10000 #controls how many therapist profiles we want to scrape
+
+db_name = 'database.db'
+connection = sqlite3.connect(db_name)
+c = connection.cursor()
 
 #prof_id = '95997' #Choy
 #prof_id = '35139' #Truong
@@ -20,9 +28,12 @@ for i in range(num_profiles):
 	if prof_id == prof_start_id and i > 0:
 		break
 
+	info = []
+
 	print '\nID'
 	print '-------------------------'
 	print prof_id
+	info.append(int(prof_id))
 	driver.get(url % prof_id)
 	soup = BeautifulSoup(driver.page_source)
 	#print soup.prettify()
@@ -34,6 +45,7 @@ for i in range(num_profiles):
 	print '\nNAME'
 	print '-------------------------'
 	name = re.search(r'(?:Dr\. )?([A-Za-z\. -]+),?', soup.title.string).group(1)
+	info.append(str(name))
 	print name
 
 	#extract description paragraph
@@ -42,6 +54,8 @@ for i in range(num_profiles):
 	summary= soup.find('div', {'class' : 'section profile-personalstatement'})
 	summary = re.sub("[ \t\n]+"," ", str(summary).strip())
 	statements = [summary_i.strip() for summary_i in summary.replace('<div class="section profile-personalstatement"> ', '').replace('</div>', '').split('<div class="statementPara"> ')[1:]]
+	collated = ' '.join(statements)
+	info.append(collated)
 	print ' '.join(statements)
 
 	#extract phone number
@@ -50,7 +64,20 @@ for i in range(num_profiles):
 	match = re.search(r'(?:<a href=\"tel:([0-9]+))', driver.page_source.replace('\n', ''))
 	if match:
 		phone = match.group(1)
+		info.append(str(phone))
 		print phone
+	else: 
+		info.append('') #no phone number found
+
+	# At this point, we insert this info into the database.
+	db.insert(c, 'therapists', info, ['pt_id', 'name', 'summary', 'phone'])
+
+	# Get the therapist id (for use in later insertions) NEED TO KEEP TRACK OF THIS IN THE FUTURE FOR UPDATES
+	db.select(c, ['therapist_id'], 'therapists', where='pt_id=' + str(info[0]))
+	therapist_id = c.fetchone()[0]
+	if therapist_id == []:
+		c.execute('SELECT last_insert_rowid()')
+		therapist_id = c.fetchone()[0]
 
 	#extract location
 	print '\nLOCATION'
@@ -58,6 +85,7 @@ for i in range(num_profiles):
 	streetAddress = soup.find('span', {'itemprop': 'streetAddress'})
 	zipCode = soup.find('span', {'itemprop': 'postalcode'})
 	if streetAddress and zipCode:
+		db.insert(c, 'th_location', (therapist_id, streetAddress.text, zipCode.text))
 		print streetAddress.text, zipCode.text
 
 	#extract an additional location, if one exists
@@ -67,91 +95,131 @@ for i in range(num_profiles):
 		streetAddress2 = re.search(r'> *([0-9]+[A-Za-z ]+)<', text)
 		zipCode2 = re.search(r'"postalcode">([0-9]{5})<', text)
 		if streetAddress2 and zipCode2:
+			db.insert(c, 'th_location', (therapist_id, streetAddress2.group(1), zipCode2.group(1)))
 			print streetAddress2.group(1), zipCode2.group(1)
 
 
 	#extract main specialties
 	print '\nSPECIALTIES'
 	print '-------------------------'
+	specialties = []
 	for li in soup.findAll('li', {'class':"highlight"}):
-		x = re.sub('[^0-9a-zA-Z ,-:]+', '', li.text)
+		x = str(re.sub('[^0-9a-zA-Z ,-:]+', '', li.text))
 		print x
+		specialties.append((therapist_id, x))
+	if len(specialties) > 0:
+		db.insert(c, 'th_specialties', specialties, multi=True)
 
 	#extract issues focus
 	print '\nISSUES'
 	print '-------------------------'
+	issues = []
 	text = re.search(r'Issues</h3>.*?<h', driver.page_source.replace('\n', ''))
 	if text:
 		text = BeautifulSoup(text.group(0))
 		for li in text.findAll('li'):
 			print li.text
+			issues.append((therapist_id, str(li.text)))
+		if len(issues) > 0:
+			db.insert(c, 'th_issues', issues, multi=True)
 
 	#extract mental health focus
 	print '\nMENTAL HEALTH'
 	print '-------------------------'
+	focus = []
 	text = re.search(r'Mental Health.*?<h', driver.page_source.replace('\n', ''))
 	if text:
 		text = BeautifulSoup(text.group(0))
 		for li in text.findAll('li'):
 			print li.text
+			focus.append((therapist_id, str(li.text)))
+		if len(focus) > 0:
+			db.insert(c, 'th_mental_health_focus', focus, multi=True)
 
 	#extract sexuality focus
 	print '\nSEXUALITY'
 	print '-------------------------'
+	vals = []
 	text = re.search(r'Sexuality.*?<div class="spec-list">', driver.page_source.replace('\n', ''))
 	if text: 
 		text = BeautifulSoup(text.group(0))
 		for li in text.findAll('li'):
 			print li.text
+			vals.append((therapist_id, str(li.text)))
+		if len(vals) > 0:
+			db.insert(c, 'th_sexuality_focus', vals, multi=True)
 
 	#extract categories 
 	print '\nCATEGORIES'
 	print '-------------------------'
+	vals = []
 	text = re.search(r'Categories.*?<div class="spec-list">', driver.page_source.replace('\n', ''))
 	if text: 
 		text = BeautifulSoup(text.group(0))
 		for li in text.findAll('li'):
 			print li.text
+			vals.append((therapist_id, str(li.text)))
+		if len(vals) > 0:
+			db.insert(c, 'th_categories', vals, multi=True)
 
 	#extract languages other than english
 	print '\nLANGUAGES'
 	print '-------------------------'
+	vals = []
 	text = re.search(r'Alternative Languages.*?"spec-subcat"', driver.page_source.replace('\n', ''))
 	if text: 
 		text = BeautifulSoup(text.group(0))
 		for s in text.findAll('span'):
-			print s.text.replace(',', '')
+			parsed = s.text.replace(',', '')
+			vals.append((therapist_id, str(parsed)))
+			print parsed
+		if len(vals) > 0:
+			db.insert(c, 'th_languages', vals, multi=True)
 
 	#extract treatment approach
 	print '\nTREATMENT ORIENTATION'
 	print '-------------------------'
+	vals = []
 	text = re.search(r'Treatment Orientation.*?<h3 class="spec-subcat">', driver.page_source.replace('\n', ''))
 	if text: 
 		text = BeautifulSoup(text.group(0))
 		for li in text.findAll('li'):
 			print li.text
+			vals.append((therapist_id, str(li.text)))
+		if len(vals) > 0:
+			db.insert(c, 'th_treatment_orientation', vals, multi=True)
 
 	#extract modality
 	print '\nMODALITY'
 	print '-------------------------'
+	vals = []
 	text = re.search(r'Modality.*?</div>', driver.page_source.replace('\n', ''))
 	if text: 
 		text = BeautifulSoup(text.group(0))
 		for li in text.findAll('li'):
 			print li.text
+			vals.append((therapist_id, str(li.text)))
+		if len(vals) > 0:
+			db.insert(c, 'th_modality', vals, multi=True)
 
 	#extract insurance providers
 	print '\nINSURANCE'
 	print '-------------------------'
+	vals = []
 	text = re.search(r'Accepted Insurance Plans.*?<h', driver.page_source.replace('\n', ''))
 	if text:
 		text = BeautifulSoup(text.group(0))
 		for li in text.findAll('li'):
 			print li.text
+			vals.append((therapist_id, str(li.text)))
+		if len(vals) > 0:
+			db.insert(c, 'th_insurance', vals, multi=True)
 
 
 	print "\n*********************************************"
 
+	connection.commit()
 	sleep(3) #to be polite to their servers/behave more like a real client
 
+connection.close()
 driver.quit()
