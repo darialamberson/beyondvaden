@@ -9,7 +9,6 @@ import sqlite3
 # a list of strings of the relevant columns, and the values to be inserted (either a list
 # or a list of tuples for multi=True), inserts the given values into the specified columns 
 # of the table. Use multi and the aforementioned formatting for multiple inserts.
-# ADD "REPLACE" FUNCTIONALITY!
 
 def insert(cursor, table, values, columns=None, multi=False):
 	if columns is not None:
@@ -26,6 +25,27 @@ def insert(cursor, table, values, columns=None, multi=False):
 	else:
 		cursor.execute(query, values)
 
+
+
+# FUNCTION: replace(cursor, table, columns, values, multi=False)
+# USAGE: replace(c, 'therapists', ['id', pt_id', 'name', 'summary', 'phone'], info)
+# -------------------------------------------------------------
+# Same as insert but replaces existing rows instead.
+
+def replace(cursor, table, values, columns=None, multi=False):
+	if columns is not None:
+		query = '''REPLACE INTO %s(%s) VALUES (%s)''' % (table, ', '.join(columns), ', '.join(['?'] * len(columns)))
+	else:
+		if multi:
+			col_len = len(values[0])
+		else:
+			col_len = len(values)
+		query = '''REPLACE INTO %s VALUES (%s)''' % (table, ', '.join(['?'] * col_len))
+	#print query #for debug
+	if multi:
+		cursor.executemany(query, values)
+	else:
+		cursor.execute(query, values)
 
 
 # FUNCTION: select(cursor, columns, table, distinct=False, where=None, order_by=None, limit=None)

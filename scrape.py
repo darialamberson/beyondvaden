@@ -24,11 +24,18 @@ c = connection.cursor()
 #prof_id = '66434' #Schellenberg
 
 for i in range(num_profiles):
+
 	#case we have wrapped back around so we're done
 	if prof_id == prof_start_id and i > 0:
 		break
 
 	info = []
+	exists = False #keeps track of whether we've seen the therapist before
+	db.select(c, ['therapist_id'], 'therapists', where='pt_id=' + prof_id)
+	therapist_id = c.fetchone()[0]
+	if therapist_id != []:
+		info.append(therapist_id)
+		exists = True
 
 	print '\nID'
 	print '-------------------------'
@@ -70,10 +77,13 @@ for i in range(num_profiles):
 		info.append('') #no phone number found
 
 	# At this point, we insert this info into the database.
-	db.insert(c, 'therapists', info, ['pt_id', 'name', 'summary', 'phone'])
+	if exists:
+		db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+	else:
+		db.insert(c, 'therapists', info, ['pt_id', 'name', 'summary', 'phone'])
 
 	# Get the therapist id (for use in later insertions) NEED TO KEEP TRACK OF THIS IN THE FUTURE FOR UPDATES
-	db.select(c, ['therapist_id'], 'therapists', where='pt_id=' + str(info[0]))
+	db.select(c, ['therapist_id'], 'therapists', where='pt_id=' + prof_id)
 	therapist_id = c.fetchone()[0]
 	if therapist_id == []:
 		c.execute('SELECT last_insert_rowid()')
@@ -85,7 +95,10 @@ for i in range(num_profiles):
 	streetAddress = soup.find('span', {'itemprop': 'streetAddress'})
 	zipCode = soup.find('span', {'itemprop': 'postalcode'})
 	if streetAddress and zipCode:
-		db.insert(c, 'th_location', (therapist_id, streetAddress.text, zipCode.text))
+		if exists:
+			db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+		else:
+			db.insert(c, 'th_location', (therapist_id, streetAddress.text, zipCode.text))
 		print streetAddress.text, zipCode.text
 
 	#extract an additional location, if one exists
@@ -95,7 +108,10 @@ for i in range(num_profiles):
 		streetAddress2 = re.search(r'> *([0-9]+[A-Za-z ]+)<', text)
 		zipCode2 = re.search(r'"postalcode">([0-9]{5})<', text)
 		if streetAddress2 and zipCode2:
-			db.insert(c, 'th_location', (therapist_id, streetAddress2.group(1), zipCode2.group(1)))
+			if exists:
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+			else:
+				db.insert(c, 'th_location', (therapist_id, streetAddress2.group(1), zipCode2.group(1)))
 			print streetAddress2.group(1), zipCode2.group(1)
 
 
@@ -108,7 +124,10 @@ for i in range(num_profiles):
 		print x
 		specialties.append((therapist_id, x))
 	if len(specialties) > 0:
-		db.insert(c, 'th_specialties', specialties, multi=True)
+		if exists:
+			db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+		else:
+			db.insert(c, 'th_specialties', specialties, multi=True)
 
 	#extract issues focus
 	print '\nISSUES'
@@ -121,7 +140,10 @@ for i in range(num_profiles):
 			print li.text
 			issues.append((therapist_id, str(li.text)))
 		if len(issues) > 0:
-			db.insert(c, 'th_issues', issues, multi=True)
+			if exists:
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+			else:
+				db.insert(c, 'th_issues', issues, multi=True)
 
 	#extract mental health focus
 	print '\nMENTAL HEALTH'
@@ -134,7 +156,10 @@ for i in range(num_profiles):
 			print li.text
 			focus.append((therapist_id, str(li.text)))
 		if len(focus) > 0:
-			db.insert(c, 'th_mental_health_focus', focus, multi=True)
+			if exists:
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+			else:
+				db.insert(c, 'th_mental_health_focus', focus, multi=True)
 
 	#extract sexuality focus
 	print '\nSEXUALITY'
@@ -147,7 +172,10 @@ for i in range(num_profiles):
 			print li.text
 			vals.append((therapist_id, str(li.text)))
 		if len(vals) > 0:
-			db.insert(c, 'th_sexuality_focus', vals, multi=True)
+			if exists:
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+			else:
+				db.insert(c, 'th_sexuality_focus', vals, multi=True)
 
 	#extract categories 
 	print '\nCATEGORIES'
@@ -160,7 +188,10 @@ for i in range(num_profiles):
 			print li.text
 			vals.append((therapist_id, str(li.text)))
 		if len(vals) > 0:
-			db.insert(c, 'th_categories', vals, multi=True)
+			if exists:
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+			else:
+				db.insert(c, 'th_categories', vals, multi=True)
 
 	#extract languages other than english
 	print '\nLANGUAGES'
@@ -174,7 +205,10 @@ for i in range(num_profiles):
 			vals.append((therapist_id, str(parsed)))
 			print parsed
 		if len(vals) > 0:
-			db.insert(c, 'th_languages', vals, multi=True)
+			if exists:
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+			else:
+				db.insert(c, 'th_languages', vals, multi=True)
 
 	#extract treatment approach
 	print '\nTREATMENT ORIENTATION'
@@ -187,7 +221,10 @@ for i in range(num_profiles):
 			print li.text
 			vals.append((therapist_id, str(li.text)))
 		if len(vals) > 0:
-			db.insert(c, 'th_treatment_orientation', vals, multi=True)
+			if exists:
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+			else:
+				db.insert(c, 'th_treatment_orientation', vals, multi=True)
 
 	#extract modality
 	print '\nMODALITY'
@@ -200,7 +237,10 @@ for i in range(num_profiles):
 			print li.text
 			vals.append((therapist_id, str(li.text)))
 		if len(vals) > 0:
-			db.insert(c, 'th_modality', vals, multi=True)
+			if exists:
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+			else:
+				db.insert(c, 'th_modality', vals, multi=True)
 
 	#extract insurance providers
 	print '\nINSURANCE'
@@ -213,7 +253,10 @@ for i in range(num_profiles):
 			print li.text
 			vals.append((therapist_id, str(li.text)))
 		if len(vals) > 0:
-			db.insert(c, 'th_insurance', vals, multi=True)
+			if exists:
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+			else:
+				db.insert(c, 'th_insurance', vals, multi=True)
 
 
 	print "\n*********************************************"
