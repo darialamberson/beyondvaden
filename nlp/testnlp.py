@@ -1,14 +1,13 @@
-from generate_tfidf import generate_tfidf
-from classify import classify_query
-import cPickle as pickle
+from CategoryClassifier import CategoryClassifier
+
 
 def main():
-	wordcount_file = 'counts.csv'
-	tf_idf_file = 'tfidf_sparse.dat'
+	word_counts_file = 'counts.csv'
 	query = 'kill kill assault sad'
-	generate_tfidf(wordcount_file)
-	scores = classify_query('kill kill assault ', tf_idf_file, wordcount_file)
-	print scores
+
+	c = CategoryClassifier(word_counts_file=word_counts_file)
+	top_categories = c.classify(query)
+	print top_categories
 
 
 if __name__ == "__main__":
