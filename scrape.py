@@ -9,13 +9,16 @@ import db_connector as db
 
 driver = webdriver.PhantomJS(os.path.join(os.getcwd(), 'bin/phantomjs'))
 
-url = 'https://therapists.psychologytoday.com/rms/prof_detail.php?profid=%s&sid=1459550134.2557_26010&zipcode=94305&search=94305&tr=NextProf'
-prof_start_id = '207105' #Savant--maybe we should add in other zip codes?
+#url = 'https://therapists.psychologytoday.com/rms/prof_detail.php?profid=%s&sid=1459550134.2557_26010&zipcode=94305&search=94305&tr=NextProf'
+#prof_start_id = '207105' #Savant--maybe we should add in other zip codes?
+url = 'https://therapists.psychologytoday.com/rms/prof_detail.php?profid=%s&sid=1461553646.8442_2731&city=Palo+Alto&county=Santa+Clara&state=CA&tr=NextProf' # All PA Zip Codes
+prof_start_id = '143458' # April R Holman
 prof_id = prof_start_id
 num_profiles = 10000 #controls how many therapist profiles we want to scrape
 
 db_name = 'database.db'
 connection = sqlite3.connect(db_name)
+connection.text_factory = str
 c = connection.cursor()
 
 #prof_id = '95997' #Choy
@@ -32,10 +35,13 @@ for i in range(num_profiles):
 	info = []
 	exists = False #keeps track of whether we've seen the therapist before
 	db.select(c, ['therapist_id'], 'therapists', where='pt_id=' + prof_id)
-	therapist_id = c.fetchone()[0]
-	if therapist_id != []:
-		info.append(therapist_id)
-		exists = True
+	try:
+		therapist_id = c.fetchone()[0]
+		if therapist_id != []:
+			info.append(therapist_id)
+			exists = True
+	except TypeError:
+		pass
 
 	print '\nID'
 	print '-------------------------'
@@ -44,9 +50,6 @@ for i in range(num_profiles):
 	driver.get(url % prof_id)
 	soup = BeautifulSoup(driver.page_source)
 	#print soup.prettify()
-
-	#extract the profile linked to by the "next" button (for use the next time through the loop)
-	prof_id = re.search(r'ProfileNav_prevProfLink.*?profid=([0-9]+)', driver.page_source.replace('\n', '')).group(1)
 
 	#extract full name
 	print '\nNAME'
@@ -81,6 +84,7 @@ for i in range(num_profiles):
 		db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
 	else:
 		db.insert(c, 'therapists', info, ['pt_id', 'name', 'summary', 'phone'])
+	connection.commit()
 
 	# Get the therapist id (for use in later insertions) NEED TO KEEP TRACK OF THIS IN THE FUTURE FOR UPDATES
 	db.select(c, ['therapist_id'], 'therapists', where='pt_id=' + prof_id)
@@ -89,6 +93,9 @@ for i in range(num_profiles):
 		c.execute('SELECT last_insert_rowid()')
 		therapist_id = c.fetchone()[0]
 
+	#extract the profile linked to by the "next" button (for use the next time through the loop)
+	prof_id = re.search(r'ProfileNav_prevProfLink.*?profid=([0-9]+)', driver.page_source.replace('\n', '')).group(1)
+	
 	#extract location
 	print '\nLOCATION'
 	print '-------------------------'
@@ -138,7 +145,11 @@ for i in range(num_profiles):
 		text = BeautifulSoup(text.group(0))
 		for li in text.findAll('li'):
 			print li.text
-			issues.append((therapist_id, str(li.text)))
+			try:
+				for item in str(li.text).split(', '):
+					issues.append((therapist_id, item))
+			except UnicodeEncodeError:
+					pass
 		if len(issues) > 0:
 			if exists:
 				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
@@ -262,7 +273,7 @@ for i in range(num_profiles):
 	print "\n*********************************************"
 
 	connection.commit()
-	sleep(3) #to be polite to their servers/behave more like a real client
+	sleep(0.25) #to be polite to their servers/behave more like a real client
 
 connection.close()
 driver.quit()
