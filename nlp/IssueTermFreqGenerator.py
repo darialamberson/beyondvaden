@@ -1,8 +1,11 @@
 # Requires packages: html2text, bs4, google
 
 db_name = '../database.db'
-num_articles = 10
+num_articles = 20
 logging = True #logging output to check what kinds of results we're getting
+check_validity = True #filters out words that don't appear in the valid_words_file
+valid_words_file = 'google-10000-english-master/google-10000-english.txt'
+#valid_words_file = google-10000-english-master/20k.txt'
 
 import sqlite3
 import html2text
@@ -23,6 +26,9 @@ stemmer = PorterStemmer()
 tf_folder_path = os.path.join(os.getcwd(), 'tf')
 corpus = set()
 pause_time=0.5
+
+if check_validity:
+	valid_words = set(str(stemmer.stem(line.rstrip().lower())) for line in open(valid_words_file, 'r'))
 
 if logging:
 	log = open('tf-log', 'w')
@@ -62,9 +68,15 @@ for issue in issues:
 				plaintext = h.handle(unicode(html.read(), 'ISO-8859-1')) #converts the html into plaintext
 				processed = re.sub(r'[^a-zA-Z]+', ' ', plaintext)
 				#print processed
-				stemmed = [str(stemmer.stem(word.lower())) for word in processed.split()]
-				cumulative += stemmed
-			except:
+				if check_validity:
+					for word in processed.split():
+						processed = str(stemmer.stem(word.lower()))
+						if processed in valid_words:
+							cumulative.append(processed)
+				else:
+					stemmed = [str(stemmer.stem(word.lower())) for word in processed.split()]
+					cumulative += stemmed
+			except: #mostly to ignore urllib2 errors...
 				pass
 	counts = Counter(cumulative)
 	tf = open(os.path.join(tf_folder_path, issue), 'w')
