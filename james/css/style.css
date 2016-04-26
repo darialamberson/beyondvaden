@@ -1,0 +1,18 @@
+/*!
+ * Beyond Vaden CSS
+ *
+ * Copyright 2013 Twitter, Inc
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Designed and built with all the love in the world by @mdo and @fat.
+ */
+
+.therapist-list {
+  list-style-type: none;
+  margin: 0;
+}
+
+h2 {
+  color: #7733ff;
+}
