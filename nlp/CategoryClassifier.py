@@ -3,6 +3,7 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from scipy.sparse import csr_matrix
 import numpy as np
 import math
+from PorterStemmer import PorterStemmer
 
 
 class CategoryClassifier(object):
@@ -11,22 +12,28 @@ class CategoryClassifier(object):
 			f.readline()
 			num_cols = len(f.readline().split(','))
 			f.seek(0)
-			word_count_matrix = genfromtxt(f, delimiter=',', skip_header=1, usecols=range(1, num_cols))
+			word_count_matrix = np.transpose(genfromtxt(f, delimiter=',', skip_header=1, usecols=range(1, num_cols)))
 		self.tfidf_matrix = TfidfTransformer().fit_transform(word_count_matrix).todense()
 		self.idf = np.array([math.log(1 + x) for x in float(len(word_count_matrix))/np.sum(word_count_matrix > 0, axis=0)])
 
 		with open(word_counts_file, 'r') as f:
-			words = f.readline().strip().split(',')
+			self.categories = f.readline().strip().split(',')
+			print self.categories
 			self.word_to_index = {}
-			for i in range(len(words)):
-				self.word_to_index[words[i]] = i
-			self.categories = []
+			i = 0
 			for line in f: 
-				self.categories.append(line.split(',')[0])
+			 	word = line.split(',')[0]
+			 	self.word_to_index[word] = i
+			 	i += 1
+			#print self.word_to_index
 
 
 	def classify(self, query):
-		query_words = query.split() #todo: stem words
+		query = "".join(c for c in query if c not in ('!','.',':',',',';','?')).lower()
+		query_words = query.split() 
+		p = PorterStemmer()
+		query_words = [p.stem(query_words[i]) for i in range(len(query_words))]
+		print query_words
 		q = np.zeros(len(self.word_to_index))
 		for word in query_words:
 			if word in self.word_to_index:
