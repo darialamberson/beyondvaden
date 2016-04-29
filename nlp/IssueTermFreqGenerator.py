@@ -1,10 +1,12 @@
 # Requires packages: html2text, bs4, google
 
 db_name = '../database.db'
-num_articles = 20
+num_articles = 10
 logging = True #logging output to check what kinds of results we're getting
 check_validity = True #filters out words that don't appear in the valid_words_file
 valid_words_file = 'google-10000-english-master/google-10000-english.txt'
+stop_words_file = 'stopwords.txt'
+extra_search_keywords = ''
 #valid_words_file = google-10000-english-master/20k.txt'
 
 import sqlite3
@@ -29,6 +31,9 @@ pause_time=0.5
 
 if check_validity:
 	valid_words = set(str(stemmer.stem(line.rstrip().lower())) for line in open(valid_words_file, 'r'))
+	stop_words = set(str(stemmer.stem(line.rstrip().lower())) for line in open(stop_words_file, 'r'))
+	keywords = set(str(stemmer.stem(word.lower()) for word in extra_search_keywords.split()))
+	stop_words = stop_words.union(keywords)
 
 if logging:
 	log = open('tf-log', 'w')
@@ -50,7 +55,7 @@ print "Step 1 complete."
 # Step 2: For each category, find the top num_articles google results and generate tf counts of the stemmed plaintext.
 
 for issue in issues:
-	results = search(issue, stop = num_articles, pause=pause_time)
+	results = search(issue + ' ' + extra_search_keywords, stop = num_articles, pause=pause_time)
 	urls = [str(url) for url in results][:num_articles]
 	
 	if logging:
@@ -71,8 +76,8 @@ for issue in issues:
 				if check_validity:
 					for word in processed.split():
 						processed = str(stemmer.stem(word.lower()))
-						if processed in valid_words:
-							cumulative.append(processed)
+						if processed not in stop_words and processed in valid_words:
+								cumulative.append(processed)
 				else:
 					stemmed = [str(stemmer.stem(word.lower())) for word in processed.split()]
 					cumulative += stemmed
