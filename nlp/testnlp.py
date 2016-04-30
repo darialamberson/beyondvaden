@@ -48,8 +48,8 @@ def main():
 		testQuery(query, expected_categories, c)
 
 		print 'Test 2: Post partum prose\n***********************************'
-		query = 'I am feeling depressed after having a baby. I gave birth 2 weeks ago'
-		expected_categories =['post partum depression', 'postpartum adjustment', 'parenting']
+		query = 'I am feeling sad after having a baby. I gave birth 2 weeks ago'
+		expected_categories =['post partum depression', 'postpartum adjustment', 'parenting', 'depression']
 		testQuery(query, expected_categories, c)
 #For every expected category with rank i in the top 5, add 1/i to points. We weight a high rank more heavily than a low one.
 #Max points is the score if all n expected categories come first in the top five, ie 1/1 + 1/2 + ... 1/n, where n <= 5. 
@@ -69,7 +69,7 @@ def testQuery(query, expected_categories, c):
 		else:
 			false_pos.append(output_categories[i][0])
 	for category in expected_categories:
-		if category not in [x[0] for x in output_categories]:
+		if category not in [x[0] for x in output_categories[0:5]]:
 			false_neg.append(category)
 	print 'false positives=', false_pos
 	print 'false negatives=', false_neg
