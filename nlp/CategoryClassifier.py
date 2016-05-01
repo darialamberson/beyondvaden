@@ -30,6 +30,7 @@ class CategoryClassifier(object):
 		
 		self.idf = genfromtxt(idf_file, delimiter = ',')
 
+
 	def createTfidfFiles(self, tf_file, tfidf_file, idf_file):
 		with open(tf_file, 'r') as f:
 			f.readline()
@@ -48,6 +49,7 @@ class CategoryClassifier(object):
 
 		with open(tfidf_file, 'wb') as f:
 			pickle.dump(tfidf_matrix, f, pickle.HIGHEST_PROTOCOL)
+
 
 	def classify(self, query):
 		query = "".join(c for c in query if c not in ('!','.',':',',',';','?')).lower()

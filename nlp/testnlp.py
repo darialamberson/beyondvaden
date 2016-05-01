@@ -4,6 +4,7 @@ from PorterStemmer import PorterStemmer
 TEST_KEYWORDS = 0
 TEST_PROSE = 1
 
+
 def main():
 	tf_file = 'tf_matrix.csv'
 	tfidf_file = 'tf_idf.dat'
@@ -51,6 +52,8 @@ def main():
 		query = 'I am feeling sad after having a baby. I gave birth 2 weeks ago'
 		expected_categories =['post partum depression', 'postpartum adjustment', 'parenting', 'depression']
 		testQuery(query, expected_categories, c)
+
+
 #For every expected category with rank i in the top 5, add 1/i to points. We weight a high rank more heavily than a low one.
 #Max points is the score if all n expected categories come first in the top five, ie 1/1 + 1/2 + ... 1/n, where n <= 5. 
 #If we get at least half the max points, pass.
