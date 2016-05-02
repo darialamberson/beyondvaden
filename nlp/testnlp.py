@@ -34,7 +34,7 @@ def main():
 
 		print 'Test 5: OCD keywords\n***********************************'
 		query = 'obsessive repetitive behavior control germs perfect count ritual'
-		expected_categories = ['obsessive compulsive ocd', 'dog']
+		expected_categories = ['obsessive compulsive ocd']
 		testQuery(query, expected_categories, c)
 
 	if TEST_PROSE:
