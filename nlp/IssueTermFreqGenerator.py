@@ -1,7 +1,7 @@
 # Requires packages: html2text, bs4, google
 
 db_name = '../database.db'
-num_articles = 20
+num_articles = 10
 logging = True #logging output to check what kinds of results we're getting
 check_validity = True #filters out words that don't appear in the valid_words_file
 valid_words_file = 'google-10000-english-master/google-10000-english.txt'
