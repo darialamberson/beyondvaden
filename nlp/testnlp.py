@@ -6,7 +6,7 @@ TEST_PROSE = 1
 
 
 def main():
-	tf_file = 'tf_matrix10.csv'
+	tf_file = 'tf_matrix.csv'
 	tfidf_file = 'tf_idf.dat'
 	idf_file = 'idf.csv'
 

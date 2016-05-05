@@ -1,7 +1,7 @@
 # Requires packages: html2text, bs4, google
 
 db_name = '../database.db'
-num_articles = 20
+num_articles = 10
 logging = True #logging output to check what kinds of results we're getting
 check_validity = True #filters out words that don't appear in the valid_words_file
 valid_words_file = 'google-10000-english-master/google-10000-english.txt'
@@ -17,8 +17,6 @@ import ast
 from PorterStemmer import PorterStemmer
 from google import search
 from collections import Counter
-import urllib
-import json
 
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) #Sets python to look for things in the parent directory
@@ -30,7 +28,7 @@ def main(filename):
 	stemmer = PorterStemmer()
 	tf_folder_path = os.path.join(os.getcwd(), 'tf')
 	corpus = set()
-	pause_time = 2#0.5
+	pause_time = 0.5
 
 	if check_validity:
 		valid_words = set(str(stemmer.stem(line.rstrip().lower())) for line in open(valid_words_file, 'r'))
@@ -45,8 +43,7 @@ def main(filename):
 	connection = sqlite3.connect(db_name)
 	c = connection.cursor()
 	db.select(c, ['specialty'], 'th_specialties', distinct=True)
-	issues = [str(re.sub(r'[^a-zA-Z]+', ' ', i[0])).lower() for i in c.fetchall()]
-	issues = set(issues)
+	issues = set(str(re.sub(r'[^a-zA-Z]+', ' ', i[0])).lower() for i in c.fetchall())
 	connection.close()
 	if logging:
 		log.write("Issues: \n")
