@@ -1,6 +1,8 @@
 # A variety of helper methods that assist with basic sqlite3 functionality
 
 import sqlite3
+import datetime
+
 
 # FUNCTION: insert(cursor, table, columns, values, multi=False)
 # USAGE: insert(c, 'therapists', ['pt_id', 'name', 'summary', 'phone'], info)
@@ -11,7 +13,13 @@ import sqlite3
 # of the table. Use multi and the aforementioned formatting for multiple inserts.
 
 def insert(cursor, table, values, columns=None, multi=False):
+	time = '{:%Y-%m-%d %H:%M:%S +0000}'.format(datetime.datetime.now())
+	if multi:
+		values = [value + (time, time) for value in values]
+	else:
+		values.extend([time, time])
 	if columns is not None:
+		columns.extend(['created_at', 'updated_at'])
 		query = '''INSERT INTO %s(%s) VALUES (%s)''' % (table, ', '.join(columns), ', '.join(['?'] * len(columns)))
 	else:
 		if multi:
@@ -20,6 +28,7 @@ def insert(cursor, table, values, columns=None, multi=False):
 			col_len = len(values)
 		query = '''INSERT INTO %s VALUES (%s)''' % (table, ', '.join(['?'] * col_len))
 	#print query #for debug
+	#print values
 	if multi:
 		cursor.executemany(query, values)
 	else:
@@ -34,6 +43,11 @@ def insert(cursor, table, values, columns=None, multi=False):
 
 def replace(cursor, table, values, columns=None, multi=False):
 	if columns is not None:
+		columns.extend(['created_at', 'updated_at'])
+		if len(values) is not len(columns):
+			# add timestamps
+			time = '{:%Y-%m-%d %H:%M:%S +0000}'.format(datetime.datetime.now())
+			values.extend([time, time])
 		query = '''REPLACE INTO %s(%s) VALUES (%s)''' % (table, ', '.join(columns), ', '.join(['?'] * len(columns)))
 	else:
 		if multi:
