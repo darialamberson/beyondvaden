@@ -898,3 +898,17 @@ ActionView::Template::Error (undefined method `title' for #<Therapist:0x007f9b20
   Rendered /Users/daria/.rvm/gems/ruby-2.2.2/gems/web-console-2.3.0/lib/web_console/templates/main.js.erb within layouts/javascript (0.4ms)
   Rendered /Users/daria/.rvm/gems/ruby-2.2.2/gems/web-console-2.3.0/lib/web_console/templates/error_page.js.erb within layouts/javascript (0.4ms)
   Rendered /Users/daria/.rvm/gems/ruby-2.2.2/gems/web-console-2.3.0/lib/web_console/templates/index.html.erb (124.6ms)
+
+
+Started GET "/" for ::1 at 2016-05-08 13:19:19 -0700
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by Rails::WelcomeController#index as HTML
+  Rendered /Library/Ruby/Gems/2.0.0/gems/railties-4.2.4/lib/rails/templates/rails/welcome/index.html.erb (3.8ms)
+Completed 200 OK in 133ms (Views: 102.9ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/rails/info/properties" for ::1 at 2016-05-08 13:19:25 -0700
+Processing by Rails::InfoController#properties as */*
+  [1m[35mActiveRecord::SchemaMigration Load (0.3ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  Rendered /Library/Ruby/Gems/2.0.0/gems/railties-4.2.4/lib/rails/templates/rails/info/properties.html.erb (0.6ms)
+Completed 200 OK in 24ms (Views: 14.9ms | ActiveRecord: 0.7ms)

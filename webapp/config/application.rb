@@ -1,6 +1,14 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+#require "rubypython"
+
+#RubyPython.start(:python_exe => "python2.7") # start the Python interpreter
+
+# To import python code use method RubyPython.import("filename")
+
+#RubyPython.stop # stop the Python interpreter
+
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.

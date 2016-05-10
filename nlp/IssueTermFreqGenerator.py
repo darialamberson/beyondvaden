@@ -1,6 +1,7 @@
 # Requires packages: html2text, bs4, google
 
 db_name = '../database.db'
+default_filename = 'tf_matrix.csv'
 num_articles = 10
 logging = True #logging output to check what kinds of results we're getting
 check_validity = True #filters out words that don't appear in the valid_words_file
@@ -9,6 +10,7 @@ stop_words_file = 'stopwords.txt'
 extra_search_keywords = ''
 #valid_words_file = google-10000-english-master/20k.txt'
 
+import shutil
 import sqlite3
 import html2text
 import urllib2
@@ -22,11 +24,16 @@ import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) #Sets python to look for things in the parent directory
 import db_connector as db
 
-def main(filename):
+def main(filename, crashed=False): #"crashed" is an option to continue from the current state if the requests time out
+	print filename
+	print crashed
+
 	h = html2text.HTML2Text()
 	h.ignore_links = True
 	stemmer = PorterStemmer()
 	tf_folder_path = os.path.join(os.getcwd(), 'tf')
+	if not os.path.exists(tf_folder_path):
+		os.mkdir(tf_folder_path)
 	corpus = set()
 	pause_time = 0.5
 
@@ -53,6 +60,12 @@ def main(filename):
 	print "Step 1 complete."
 
 	# Step 2: For each category, find the top num_articles google results and generate tf counts of the stemmed plaintext.
+
+	if crashed:
+		completed = set(f for f in os.listdir(tf_folder_path) if os.path.isfile(os.path.join(tf_folder_path, f)))
+		issues = issues - completed
+		#print issues
+
 	for issue in issues:
 		results = search(issue + ' ' + extra_search_keywords, stop = num_articles, pause = pause_time)
 		urls = [str(url) for url in results][: num_articles]
@@ -121,6 +134,8 @@ def main(filename):
 		tf_matrix.write('\n')
 	tf_matrix.close()
 
+	shutil.rmtree(tf_folder_path) #removes intermediates!
+
 	print "Step 3 complete."
 		
 	if logging:
@@ -128,4 +143,6 @@ def main(filename):
 
 
 if __name__ == '__main__':
-	main(sys.argv[1])
+	filename = sys.argv[1] if len(sys.argv) > 1 else default_filename
+	crashed = sys.argv[2] if len(sys.argv) > 2 else False
+	main(filename, crashed)
