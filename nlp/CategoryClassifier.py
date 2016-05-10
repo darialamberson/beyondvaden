@@ -13,7 +13,7 @@ class CategoryClassifier(object):
 
 	def __init__(self, tf_file, tfidf_file, idf_file):
 		if not os.path.isfile(tfidf_file):
-			self.createTfidfFiles(tf_file, tfidf_file, idf_file)
+			self.__createTfidfFiles(tf_file, tfidf_file, idf_file)
 
 		with open(tf_file, 'r') as f:
 			self.categories = f.readline().strip().split(',')
@@ -28,26 +28,6 @@ class CategoryClassifier(object):
 		 	self.tfidf_matrix = pickle.load(infile).todense()
 
 		self.idf = genfromtxt(idf_file, delimiter = ',')
-
-
-	def createTfidfFiles(self, tf_file, tfidf_file, idf_file):
-		with open(tf_file, 'r') as f:
-			f.readline()
-			num_cols = len(f.readline().split(','))
-			f.seek(0)
-			word_count_matrix = np.transpose(genfromtxt(f, delimiter = ',', skip_header = 1, usecols = range(1, num_cols)))
-		tfidf_matrix = TfidfTransformer().fit_transform(word_count_matrix)
-		idf = np.array([math.log(1 + x) for x in float(len(word_count_matrix))/np.sum(word_count_matrix > 0, axis = 0)])
-
-		with open(idf_file, 'wb') as f:
-			for i in range(len(idf) - 1):
-				f.write(str(idf[i]))
-				f.write(',')
-			f.write(str(idf[len(idf) - 1]))
-			f.close()
-
-		with open(tfidf_file, 'wb') as f:
-			pickle.dump(tfidf_matrix, f, pickle.HIGHEST_PROTOCOL)
 
 
 	def classify(self, query):
@@ -68,3 +48,22 @@ class CategoryClassifier(object):
 			membership_scores.append(cossim)
 		return sorted(zip(self.categories, membership_scores), key=lambda x: x[1], reverse=True)
 
+
+	def __createTfidfFiles(self, tf_file, tfidf_file, idf_file):
+		with open(tf_file, 'r') as f:
+			f.readline()
+			num_cols = len(f.readline().split(','))
+			f.seek(0)
+			word_count_matrix = np.transpose(genfromtxt(f, delimiter = ',', skip_header = 1, usecols = range(1, num_cols)))
+		tfidf_matrix = TfidfTransformer().fit_transform(word_count_matrix)
+		idf = np.array([math.log(1 + x) for x in float(len(word_count_matrix))/np.sum(word_count_matrix > 0, axis = 0)])
+
+		with open(idf_file, 'wb') as f:
+			for i in range(len(idf) - 1):
+				f.write(str(idf[i]))
+				f.write(',')
+			f.write(str(idf[len(idf) - 1]))
+			f.close()
+
+		with open(tfidf_file, 'wb') as f:
+			pickle.dump(tfidf_matrix, f, pickle.HIGHEST_PROTOCOL)
