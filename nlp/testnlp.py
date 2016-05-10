@@ -1,12 +1,14 @@
 from CategoryClassifier import CategoryClassifier
 from PorterStemmer import PorterStemmer
+import sys
 
-TEST_KEYWORDS = 0
+TEST_KEYWORDS = 1
 TEST_PROSE = 1
+VERBOSE = 0
 
 
-def main():
-	tf_file = 'tf_matrix.csv'
+def main(tffile):
+	tf_file = tffile
 	tfidf_file = 'tf_idf.dat'
 	idf_file = 'idf.csv'
 
@@ -34,21 +36,21 @@ def main():
 
 		print 'Test 5: OCD keywords\n***********************************'
 		query = 'obsessive repetitive behavior control germs perfect count ritual'
-		expected_categories = ['obsessive compulsive ocd', 'dog']
+		expected_categories = ['obsessive compulsive ocd']
 		testQuery(query, expected_categories, c)
 
 	if TEST_PROSE:
-		print 'Test 1: Infidelity prose\n***********************************'
+		print 'Test 6: Infidelity prose\n***********************************'
 		query = 'That bastard cheated with his mistress. I\'ll kill him and the hoe.'
 		expected_categories = ['infidelity', 'relationship issues']
 		testQuery(query, expected_categories, c)
 
-		print 'Test 2: Body image prose\n***********************************'
+		print 'Test 7: Body image prose\n***********************************'
 		query = 'I am a fat bloated whale who needs to lose weight.'
 		expected_categories =['eating disorders', 'obesity', 'weight loss']
 		testQuery(query, expected_categories, c)
 
-		print 'Test 2: Post partum prose\n***********************************'
+		print 'Test 8: Post partum prose\n***********************************'
 		query = 'I am feeling sad after having a baby. I gave birth 2 weeks ago'
 		expected_categories =['post partum depression', 'postpartum adjustment', 'parenting', 'depression']
 		testQuery(query, expected_categories, c)
@@ -58,7 +60,8 @@ def main():
 #Max points is the score if all n expected categories come first in the top five, ie 1/1 + 1/2 + ... 1/n, where n <= 5. 
 #If we get at least half the max points, pass.
 def testQuery(query, expected_categories, c):
-	print 'expected_categories=', expected_categories
+	if VERBOSE:
+		print 'expected_categories=', expected_categories
 	max_points = sum(1/float(i+1) for i in range(len(expected_categories)))
 
 	output_categories = c.classify(query)
@@ -68,20 +71,23 @@ def testQuery(query, expected_categories, c):
 	for i in range(5):
 		if output_categories[i][0] in expected_categories:
 			points += 1/float(i+1)
-			print 'match:', output_categories[i][0], 'with rank', i+1
+			if VERBOSE:
+				print 'match:', output_categories[i][0], 'with rank', i+1
 		else:
 			false_pos.append(output_categories[i][0])
 	for category in expected_categories:
 		if category not in [x[0] for x in output_categories[0:5]]:
 			false_neg.append(category)
-	print 'false positives=', false_pos
-	print 'false negatives=', false_neg
+	if VERBOSE:
+		print 'false positives=', false_pos
+		print 'false negatives=', false_neg
 	score = points/float(max_points)
-	print 'score=', score
+	if VERBOSE:
+		print 'score=', score
 	print 'PASS\n' if score > .5 else 'FAIL\n'
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1])
 
 

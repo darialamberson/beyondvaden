@@ -16,7 +16,7 @@ prof_start_id = '143458' # April R Holman
 prof_id = prof_start_id
 num_profiles = 10000 #controls how many therapist profiles we want to scrape
 
-db_name = 'database.db'
+db_name = 'webapp/db/development.sqlite3'
 connection = sqlite3.connect(db_name)
 connection.text_factory = str
 c = connection.cursor()
@@ -34,10 +34,10 @@ for i in range(num_profiles):
 
 	info = []
 	exists = False #keeps track of whether we've seen the therapist before
-	db.select(c, ['therapist_id'], 'therapists', where='pt_id=' + prof_id)
+	db.select(c, ['id'], 'therapists', where='pt_id=' + prof_id)
 	try:
 		therapist_id = c.fetchone()[0]
-		if therapist_id != []:
+		if therapist_id is not None:
 			info.append(therapist_id)
 			exists = True
 	except TypeError:
@@ -81,17 +81,19 @@ for i in range(num_profiles):
 
 	# At this point, we insert this info into the database.
 	if exists:
-		db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+		db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
 	else:
 		db.insert(c, 'therapists', info, ['pt_id', 'name', 'summary', 'phone'])
 	connection.commit()
 
 	# Get the therapist id (for use in later insertions) NEED TO KEEP TRACK OF THIS IN THE FUTURE FOR UPDATES
-	db.select(c, ['therapist_id'], 'therapists', where='pt_id=' + prof_id)
-	therapist_id = c.fetchone()[0]
-	if therapist_id == []:
+	db.select(c, ['id'], 'therapists', where='pt_id=' + prof_id)
+	therapist_id = c.fetchone()
+	if therapist_id is None:
 		c.execute('SELECT last_insert_rowid()')
 		therapist_id = c.fetchone()[0]
+	else:
+		therapist_id = therapist_id[0]
 
 	#extract the profile linked to by the "next" button (for use the next time through the loop)
 	prof_id = re.search(r'ProfileNav_prevProfLink.*?profid=([0-9]+)', driver.page_source.replace('\n', '')).group(1)
@@ -103,9 +105,9 @@ for i in range(num_profiles):
 	zipCode = soup.find('span', {'itemprop': 'postalcode'})
 	if streetAddress and zipCode:
 		if exists:
-			db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+			db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
 		else:
-			db.insert(c, 'th_location', (therapist_id, streetAddress.text, zipCode.text))
+			db.insert(c, 'th_locations', [therapist_id, streetAddress.text, zipCode.text], ['therapist_id', 'addr', 'zip'])
 		print streetAddress.text, zipCode.text
 
 	#extract an additional location, if one exists
@@ -116,9 +118,9 @@ for i in range(num_profiles):
 		zipCode2 = re.search(r'"postalcode">([0-9]{5})<', text)
 		if streetAddress2 and zipCode2:
 			if exists:
-				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
-				db.insert(c, 'th_location', (therapist_id, streetAddress2.group(1), zipCode2.group(1)))
+				db.insert(c, 'th_locations', [therapist_id, streetAddress2.group(1), zipCode2.group(1)], ['therapist_id', 'addr', 'zip'])
 			print streetAddress2.group(1), zipCode2.group(1)
 
 
@@ -132,9 +134,9 @@ for i in range(num_profiles):
 		specialties.append((therapist_id, x))
 	if len(specialties) > 0:
 		if exists:
-			db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+			db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
 		else:
-			db.insert(c, 'th_specialties', specialties, multi=True)
+			db.insert(c, 'th_specialties', specialties, ['therapist_id', 'specialty'], multi=True)
 
 	#extract issues focus
 	print '\nISSUES'
@@ -152,9 +154,9 @@ for i in range(num_profiles):
 					pass
 		if len(issues) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
-				db.insert(c, 'th_issues', issues, multi=True)
+				db.insert(c, 'th_issues', issues, ['therapist_id', 'issue'], multi=True)
 
 	#extract mental health focus
 	print '\nMENTAL HEALTH'
@@ -168,9 +170,9 @@ for i in range(num_profiles):
 			focus.append((therapist_id, str(li.text)))
 		if len(focus) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
-				db.insert(c, 'th_mental_health_focus', focus, multi=True)
+				db.insert(c, 'th_mental_health_focuses', focus, ['therapist_id', 'focus'], multi=True)
 
 	#extract sexuality focus
 	print '\nSEXUALITY'
@@ -184,9 +186,9 @@ for i in range(num_profiles):
 			vals.append((therapist_id, str(li.text)))
 		if len(vals) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
-				db.insert(c, 'th_sexuality_focus', vals, multi=True)
+				db.insert(c, 'th_sexuality_focuses', vals, ['therapist_id', 'sexuality'], multi=True)
 
 	#extract categories 
 	print '\nCATEGORIES'
@@ -200,9 +202,9 @@ for i in range(num_profiles):
 			vals.append((therapist_id, str(li.text)))
 		if len(vals) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
-				db.insert(c, 'th_categories', vals, multi=True)
+				db.insert(c, 'th_categories', vals, ['therapist_id', 'category'], multi=True)
 
 	#extract languages other than english
 	print '\nLANGUAGES'
@@ -217,9 +219,9 @@ for i in range(num_profiles):
 			print parsed
 		if len(vals) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
-				db.insert(c, 'th_languages', vals, multi=True)
+				db.insert(c, 'th_languages', vals, ['therapist_id', 'language'], multi=True)
 
 	#extract treatment approach
 	print '\nTREATMENT ORIENTATION'
@@ -233,9 +235,9 @@ for i in range(num_profiles):
 			vals.append((therapist_id, str(li.text)))
 		if len(vals) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
-				db.insert(c, 'th_treatment_orientation', vals, multi=True)
+				db.insert(c, 'th_treatment_orientations', vals, ['therapist_id', 'orientation'], multi=True)
 
 	#extract modality
 	print '\nMODALITY'
@@ -249,9 +251,9 @@ for i in range(num_profiles):
 			vals.append((therapist_id, str(li.text)))
 		if len(vals) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
-				db.insert(c, 'th_modality', vals, multi=True)
+				db.insert(c, 'th_modalities', vals, ['therapist_id', 'modality'], multi=True)
 
 	#extract insurance providers
 	print '\nINSURANCE'
@@ -265,9 +267,9 @@ for i in range(num_profiles):
 			vals.append((therapist_id, str(li.text)))
 		if len(vals) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
-				db.insert(c, 'th_insurance', vals, multi=True)
+				db.insert(c, 'th_insurances', vals, ['therapist_id', 'insurance'], multi=True)
 
 
 	print "\n*********************************************"

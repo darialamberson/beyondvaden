@@ -13,8 +13,7 @@ class CategoryClassifier(object):
 
 	def __init__(self, tf_file, tfidf_file, idf_file):
 		if not os.path.isfile(tfidf_file):
-			print '**** Creating tfidf files \n'
-			self.createTfidfFiles(tf_file, tfidf_file, idf_file)
+			self.__createTfidfFiles(tf_file, tfidf_file, idf_file)
 
 		with open(tf_file, 'r') as f:
 			self.categories = f.readline().strip().split(',')
@@ -27,11 +26,30 @@ class CategoryClassifier(object):
 
 		with open(tfidf_file, 'rb') as infile:
 		 	self.tfidf_matrix = pickle.load(infile).todense()
-		
+
 		self.idf = genfromtxt(idf_file, delimiter = ',')
 
 
-	def createTfidfFiles(self, tf_file, tfidf_file, idf_file):
+	def classify(self, query):
+		query = "".join(c for c in query if c not in ('!','.',':',',',';','?')).lower()
+		query_words = query.split() 
+		p = PorterStemmer()
+		query_words = [p.stem(query_words[i]) for i in range(len(query_words))]
+		q = np.zeros(len(self.word_to_index))
+		for word in query_words:
+			if word in self.word_to_index:
+				q[self.word_to_index[word]] += self.idf[self.word_to_index[word]]
+
+		membership_scores = []
+		for i in range(len(self.tfidf_matrix)):
+			#compute cosine similarity
+			docvec = self.tfidf_matrix[i]
+			cossim = (np.inner(docvec, q)/(np.linalg.norm(docvec)*np.linalg.norm(q))).item(0,0)
+			membership_scores.append(cossim)
+		return sorted(zip(self.categories, membership_scores), key=lambda x: x[1], reverse=True)
+
+
+	def __createTfidfFiles(self, tf_file, tfidf_file, idf_file):
 		with open(tf_file, 'r') as f:
 			f.readline()
 			num_cols = len(f.readline().split(','))
@@ -49,18 +67,3 @@ class CategoryClassifier(object):
 
 		with open(tfidf_file, 'wb') as f:
 			pickle.dump(tfidf_matrix, f, pickle.HIGHEST_PROTOCOL)
-
-
-	def classify(self, query):
-		query = "".join(c for c in query if c not in ('!','.',':',',',';','?')).lower()
-		query_words = query.split() 
-		p = PorterStemmer()
-		query_words = [p.stem(query_words[i]) for i in range(len(query_words))]
-		q = np.zeros(len(self.word_to_index))
-		for word in query_words:
-			if word in self.word_to_index:
-				q[self.word_to_index[word]] += self.idf[self.word_to_index[word]]
-
-		membership_scores = np.squeeze(np.asarray(np.dot(self.tfidf_matrix, q)))
-		return sorted(zip(self.categories, membership_scores), key=lambda x: x[1], reverse=True)
-
