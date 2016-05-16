@@ -5,10 +5,10 @@ default_filename = 'tf_matrix.csv'
 num_articles = 10
 logging = True #logging output to check what kinds of results we're getting
 check_validity = True #filters out words that don't appear in the valid_words_file
-valid_words_file = 'google-10000-english-master/google-10000-english.txt'
+#valid_words_file = 'google-10000-english-master/google-10000-english.txt'
 stop_words_file = 'stopwords.txt'
 extra_search_keywords = ''
-#valid_words_file = google-10000-english-master/20k.txt'
+valid_words_file = 'google-10000-english-master/20k.txt'
 
 import shutil
 import sqlite3
@@ -25,8 +25,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) #Se
 import db_connector as db
 
 def main(filename, crashed=False): #"crashed" is an option to continue from the current state if the requests time out
-	print filename
-	print crashed
+	#print filename
+	#print crashed
 
 	h = html2text.HTML2Text()
 	h.ignore_links = True
@@ -98,10 +98,9 @@ def main(filename, crashed=False): #"crashed" is an option to continue from the 
 		tf = open(os.path.join(tf_folder_path, issue), 'w')
 
 		for word in sorted(counts.keys()): #sort words in alphabetical order
-			if len(word) < 15:
-				corpus.add(word)
-				tf.write(str((word, counts[word]))) #write tuples of words with the word count
-				tf.write('\n')
+			corpus.add(word)
+			tf.write(str((word, counts[word]))) #write tuples of words with the word count
+			tf.write('\n')
 
 		tf.close()
 
