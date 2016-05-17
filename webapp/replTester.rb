@@ -11,12 +11,15 @@ loop do
  	output = getCategoriesAndTherapists(query)
 
  	suicide = 0
+
  	for category in output[0] do
+ 		puts category
  		if category.include?("suicid")
  			suicide = 1
  		end
  	end
- 	if suicide 
+
+ 	if suicide == 1
  		puts "\n\nIt seems you are having suicidal thoughts. Please call the National Suicide Prevention Lifeline at 1(800)273-8255. Stay strong, we're here for you!\n"
 	else
 		puts "\n\nOk! I believe the 3 categories most relevant to your problem are:\n\n"
