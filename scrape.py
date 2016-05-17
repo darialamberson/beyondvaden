@@ -16,7 +16,7 @@ prof_start_id = '143458' # April R Holman
 prof_id = prof_start_id
 num_profiles = 10000 #controls how many therapist profiles we want to scrape
 
-db_name = 'webapp/db/development.sqlite3'
+db_name = 'Theratree/db/development.sqlite3'
 connection = sqlite3.connect(db_name)
 connection.text_factory = str
 c = connection.cursor()
