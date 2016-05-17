@@ -1,3 +1,3 @@
 class Therapist < ActiveRecord::Base
-  # belongs_to :th_location
+  has_one :th_location
 end
