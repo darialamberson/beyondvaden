@@ -12,6 +12,7 @@ def getTherapists(query)
 
 end
 
+
 if __FILE__ == $PROGRAM_NAME
 	query = "eating fat weight binge purge pounds calories thin skinny cleanse diet puke vomit starve scale toilet anorexic bulimia"
 	#query = "suicide suicide suicide suicide"

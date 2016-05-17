@@ -1,5 +1,7 @@
-import psycopg2
 import getpass
+import sqlite3
+import os
+import operator
 
 #Input is a list of tuples ex. [("category",score)]
 def rank(categoryAndWeight):
@@ -8,28 +10,27 @@ def rank(categoryAndWeight):
 	for i in range(len(categoryAndWeight)):
 		weights[categoryAndWeight[i][0]] = categoryAndWeight[i][1]
 
-	try:
-		conn = psycopg2.connect("dbname='therapists' user='%s' host='localhost' password=''" %(getpass.getuser()))
-	except:
-	    print "I am unable to connect to the database"
+	dir_path = os.path.dirname(os.path.abspath(__file__))
+	full_path = os.path.join(dir_path, '../database.db')
+	conn = sqlite3.connect(full_path)
 	cur = conn.cursor()
 
-	cur.execute("""SELECT id from therapists""")
+	cur.execute('SELECT therapist_id from therapists')
 	ids = cur.fetchall()
 
-	#Allocate array to hold therapist scores
-	scores = [0 for i in range(ids[len(ids)-1][0] + 1)]
-
+	scores = {}
 	#Loop through all therapists in db
 	for row in ids:
 		th_id = row[0]
-		#Compute score for therapist
-		cur.execute("""SELECT specialty FROM th_specialties WHERE therapist_id = %s""", [th_id])
+		cur.execute('SELECT specialty FROM th_specialties WHERE therapist_id = ' + str(th_id))
 		specialties = cur.fetchall()
+		scores[th_id] = 0
 		for s in specialties:
 			s = s[0].lower()
 			scores[th_id] += (weights[s]/len(specialties)) if s in weights else 0
-	return [i[0] for i in sorted(enumerate(scores), key=lambda x:x[1], reverse=True)]
+
+	sorted_x = [x[0] for x in sorted(scores.items(), key=operator.itemgetter(1), reverse = True)]
+	return sorted_x
 
 
 
