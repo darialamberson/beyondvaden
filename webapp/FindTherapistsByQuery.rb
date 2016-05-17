@@ -19,12 +19,3 @@ def getCategoriesAndTherapists(query)
 	return [categories,therapists]
 
 end
-
-
-if __FILE__ == $PROGRAM_NAME
-	query = "eating fat weight binge purge pounds calories thin skinny cleanse diet puke vomit starve scale toilet anorexic bulimia"
-	# query = "suicide kill pills cut"
-	output = getCategoriesAndTherapists(query)
-	p output[0]
-	p output[1]
-end

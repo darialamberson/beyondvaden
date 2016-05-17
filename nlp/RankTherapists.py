@@ -30,6 +30,7 @@ def rank(categoryAndWeight):
 			s = s[0].lower()
 			scores[th_id] += (weights[s]/len(specialties)) if s in weights else 0
 
+	#Return therapist ids sorted in descending order of score
 	sorted_x = [x[0] for x in sorted(scores.items(), key=operator.itemgetter(1), reverse = True)]
 	return sorted_x
 
