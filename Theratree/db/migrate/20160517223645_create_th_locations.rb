@@ -1,11 +1,13 @@
 class CreateThLocations < ActiveRecord::Migration
   def change
-    create_table :th_locations do |t|
-      t.integer :therapist_id
-      t.text :addr
-      t.integer :zip
+    if !(table_exists?(:th_locations))
+      create_table :th_locations do |t|
+        t.integer :therapist_id
+        t.text :addr
+        t.integer :zip
 
-      t.timestamps null: false
+        t.timestamps null: false
+      end
     end
   end
 end
