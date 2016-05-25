@@ -34,7 +34,7 @@ for i in range(num_profiles):
 
 	info = []
 	exists = False #keeps track of whether we've seen the therapist before
-	db.select(c, ['id'], 'therapists', where='pt_id=' + prof_id)
+	db.select(c, ['therapist_id'], 'therapists', where='pt_id=' + prof_id)
 	try:
 		therapist_id = c.fetchone()[0]
 		if therapist_id is not None:
@@ -81,13 +81,13 @@ for i in range(num_profiles):
 
 	# At this point, we insert this info into the database.
 	if exists:
-		db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
+		db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
 	else:
 		db.insert(c, 'therapists', info, ['pt_id', 'name', 'summary', 'phone'])
 	connection.commit()
 
 	# Get the therapist id (for use in later insertions) NEED TO KEEP TRACK OF THIS IN THE FUTURE FOR UPDATES
-	db.select(c, ['id'], 'therapists', where='pt_id=' + prof_id)
+	db.select(c, ['therapist_id'], 'therapists', where='pt_id=' + prof_id)
 	therapist_id = c.fetchone()
 	if therapist_id is None:
 		c.execute('SELECT last_insert_rowid()')
@@ -105,7 +105,7 @@ for i in range(num_profiles):
 	zipCode = soup.find('span', {'itemprop': 'postalcode'})
 	if streetAddress and zipCode:
 		if exists:
-			db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
+			db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
 		else:
 			db.insert(c, 'th_locations', [therapist_id, streetAddress.text, zipCode.text], ['therapist_id', 'addr', 'zip'])
 		print streetAddress.text, zipCode.text
@@ -118,7 +118,7 @@ for i in range(num_profiles):
 		zipCode2 = re.search(r'"postalcode">([0-9]{5})<', text)
 		if streetAddress2 and zipCode2:
 			if exists:
-				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
 				db.insert(c, 'th_locations', [therapist_id, streetAddress2.group(1), zipCode2.group(1)], ['therapist_id', 'addr', 'zip'])
 			print streetAddress2.group(1), zipCode2.group(1)
@@ -134,7 +134,7 @@ for i in range(num_profiles):
 		specialties.append((therapist_id, x))
 	if len(specialties) > 0:
 		if exists:
-			db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
+			db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
 		else:
 			db.insert(c, 'th_specialties', specialties, ['therapist_id', 'specialty'], multi=True)
 
@@ -154,7 +154,7 @@ for i in range(num_profiles):
 					pass
 		if len(issues) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
 				db.insert(c, 'th_issues', issues, ['therapist_id', 'issue'], multi=True)
 
@@ -170,7 +170,7 @@ for i in range(num_profiles):
 			focus.append((therapist_id, str(li.text)))
 		if len(focus) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
 				db.insert(c, 'th_mental_health_focuses', focus, ['therapist_id', 'focus'], multi=True)
 
@@ -186,7 +186,7 @@ for i in range(num_profiles):
 			vals.append((therapist_id, str(li.text)))
 		if len(vals) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
 				db.insert(c, 'th_sexuality_focuses', vals, ['therapist_id', 'sexuality'], multi=True)
 
@@ -219,7 +219,7 @@ for i in range(num_profiles):
 			print parsed
 		if len(vals) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
 				db.insert(c, 'th_languages', vals, ['therapist_id', 'language'], multi=True)
 
@@ -235,7 +235,7 @@ for i in range(num_profiles):
 			vals.append((therapist_id, str(li.text)))
 		if len(vals) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
 				db.insert(c, 'th_treatment_orientations', vals, ['therapist_id', 'orientation'], multi=True)
 
@@ -251,7 +251,7 @@ for i in range(num_profiles):
 			vals.append((therapist_id, str(li.text)))
 		if len(vals) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
 				db.insert(c, 'th_modalities', vals, ['therapist_id', 'modality'], multi=True)
 
@@ -267,7 +267,7 @@ for i in range(num_profiles):
 			vals.append((therapist_id, str(li.text)))
 		if len(vals) > 0:
 			if exists:
-				db.replace(c, 'therapists', info, ['id', 'pt_id', 'name', 'summary', 'phone'])
+				db.replace(c, 'therapists', info, ['therapist_id', 'pt_id', 'name', 'summary', 'phone'])
 			else:
 				db.insert(c, 'th_insurances', vals, ['therapist_id', 'insurance'], multi=True)
 

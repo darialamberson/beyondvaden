@@ -13,9 +13,16 @@
 
 ActiveRecord::Schema.define(version: 20160517224015) do
 
-  create_table "th_categories", force: :cascade do |t|
+  create_table "th_categories", id: false, force: :cascade do |t|
     t.integer  "therapist_id"
     t.text     "category"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "th_insurance", id: false, force: :cascade do |t|
+    t.integer  "therapist_id"
+    t.text     "insurance"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
@@ -27,16 +34,24 @@ ActiveRecord::Schema.define(version: 20160517224015) do
     t.datetime "updated_at",   null: false
   end
 
-  create_table "th_issues", force: :cascade do |t|
+  create_table "th_issues", id: false, force: :cascade do |t|
     t.integer  "therapist_id"
     t.text     "issue"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
 
-  create_table "th_languages", force: :cascade do |t|
+  create_table "th_languages", id: false, force: :cascade do |t|
     t.integer  "therapist_id"
     t.text     "language"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "th_location", id: false, force: :cascade do |t|
+    t.integer  "therapist_id"
+    t.text     "addr"
+    t.integer  "zip"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
@@ -45,6 +60,13 @@ ActiveRecord::Schema.define(version: 20160517224015) do
     t.integer  "therapist_id"
     t.text     "addr"
     t.integer  "zip"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "th_mental_health_focus", id: false, force: :cascade do |t|
+    t.integer  "therapist_id"
+    t.text     "focus"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
@@ -63,6 +85,20 @@ ActiveRecord::Schema.define(version: 20160517224015) do
     t.datetime "updated_at",   null: false
   end
 
+  create_table "th_modality", id: false, force: :cascade do |t|
+    t.integer  "therapist_id"
+    t.text     "modality"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "th_sexuality_focus", id: false, force: :cascade do |t|
+    t.integer  "therapist_id"
+    t.text     "sexuality"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
   create_table "th_sexuality_focuses", force: :cascade do |t|
     t.integer  "therapist_id"
     t.text     "sexuality"
@@ -70,9 +106,16 @@ ActiveRecord::Schema.define(version: 20160517224015) do
     t.datetime "updated_at",   null: false
   end
 
-  create_table "th_specialties", force: :cascade do |t|
+  create_table "th_specialties", id: false, force: :cascade do |t|
     t.integer  "therapist_id"
     t.text     "specialty"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "th_treatment_orientation", id: false, force: :cascade do |t|
+    t.integer  "therapist_id"
+    t.text     "orientation"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
@@ -84,9 +127,9 @@ ActiveRecord::Schema.define(version: 20160517224015) do
     t.datetime "updated_at",   null: false
   end
 
-  create_table "therapists", force: :cascade do |t|
+  create_table "therapists", primary_key: "therapist_id", force: :cascade do |t|
     t.integer  "pt_id"
-    t.text     "name"
+    t.text     "name",       null: false
     t.text     "summary"
     t.text     "phone"
     t.datetime "created_at", null: false
