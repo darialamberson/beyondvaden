@@ -13,7 +13,6 @@ loop do
  	suicide = 0
 
  	for category in output[0] do
- 		puts category
  		if category.include?("suicid")
  			suicide = 1
  		end
