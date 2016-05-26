@@ -1,0 +1,11 @@
+<p id="notice"><%= notice %></p>
+
+<%= form_tag url_for(controller: 'therapists', action: 'search'), method: 'get' do %>
+    <%= label_tag(:query, "What can we help you with today?") %>
+    <%= text_field_tag(:query) %>
+    <%= submit_tag("Go") %>
+<% end %>
+
+
+<!--this is where you pass the search text into Vanessa's file-->
+<%#= link_to 'Search', query: TODO %>

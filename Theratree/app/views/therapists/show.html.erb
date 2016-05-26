@@ -44,13 +44,18 @@
         </div>
         <div class="span4">
           <h2>Location</h2>
-          <p><%= @therapist.th_location %></p>
+          <% @therapist.th_location.each do |l| %>
+            <p><%= l.addr %></p>
+            <p><%= l.zip %></p>
+          <% end %>
           <p><a class="btn" href="#">Show Map &raquo;</a></p>
         </div>
         <div class="span4">
           <h2>Specialties</h2>
           <ul class="therapist-list">
-          <li><%= @therapist.th_specialty %></li>
+          <% @therapist.th_specialty.each do |s| %>
+            <li><%= s.specialty %></li>
+          <% end %>
           </ul>
         </div>
       </div>
@@ -58,14 +63,20 @@
         <div class="span4">
           <h2>Treatment Approach</h2>
           <ul class="therapist-list">
-            <li><%= @therapist.th_treatment_orientation %></li>
-            <li><%= @therapist.th_modality %></li>
+          <% @therapist.th_treatment_orientation.each do |t| %>
+            <li><%= t.orientation %></li>
+          <% end %>
+          <% @therapist.th_modality.each do |m| %>
+            <li><%= m.modality %></li>
+          <% end %>
           </ul>
         </div>
         <div class="span4">
           <h2>Finances</h2>
           <ul class="therapist-list">
-            <li><%= @therapist.th_insurance %></li>
+          <% @therapist.th_insurance.each do |i| %>
+            <li><%= i.insurance %></li>
+          <% end %>
           </ul>
         </div>
       </div>

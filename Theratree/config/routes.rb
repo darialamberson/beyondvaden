@@ -1,5 +1,14 @@
 Rails.application.routes.draw do
-  resources :therapists
+  resources :therapists # create rails default routes: index, show, etc
+
+  # /therapists/search
+  # ==> parsed as /therapists/:id with id = search
+
+  get 'search' => 'therapists#search'
+  get 'home' => 'therapists#home'
+  # map.search 'search', :controller => 'therapists'
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

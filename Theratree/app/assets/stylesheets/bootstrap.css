@@ -6119,6 +6119,19 @@ a.badge:focus {
   margin-bottom: 0;
 }
 
+.small-hero-unit {
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 100;
+  line-height: 20px;
+  color: inherit;
+  background-color: #eeeeee;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+
 .hero-unit {
   padding: 60px;
   margin-bottom: 30px;

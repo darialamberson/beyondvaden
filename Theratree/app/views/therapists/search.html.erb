@@ -1,19 +1,17 @@
 <p id="notice"><%= notice %></p>
 
-<!--this is where you pass the search text into Vanessa's file-->
-<%= @therapists = getCategoriesAndTherapists(query) %>
+<h1>Great! Here are some therapists we think you should check out.</h1>
 
 <!--to display the therapist-->
-<tbody>
-<% @therapists.each do |therapist| %>
-    <tr>
-      <td><%= therapist.pt_id %></td>
-      <td><%= therapist.name %></td>
-      <td><%= therapist.summary %></td>
-      <td><%= therapist.phone %></td>
-      <td><%= link_to 'Show', therapist %></td>
-      <td><%= link_to 'Edit', edit_therapist_path(therapist) %></td>
-      <td><%= link_to 'Destroy', therapist, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-    </tr>
-<% end %>
-</tbody>
+<div class="row-fluid">
+  <div class="span10">
+    <% @search_therapists.each do |therapist| %>
+      <div class="small-hero-unit">
+        <h3><%= therapist.name %></h3>
+        <!--<h3>@therapist.title</h3>-->
+        <p><%= therapist.phone %></p>
+        <p><%= link_to 'Show', therapist, id: therapist.therapist_id %></p>
+      </div>
+    <% end %>
+  </div>
+</div>

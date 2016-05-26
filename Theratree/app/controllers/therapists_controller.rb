@@ -21,6 +21,14 @@ class TherapistsController < ApplicationController
   def edit
   end
 
+  def home
+  end
+
+  def search
+    # @search_therapists = getCategoriesAndTherapists(params[:query])
+    @search_therapists = Therapist.all
+  end
+
   # POST /therapists
   # POST /therapists.json
   def create
@@ -65,24 +73,23 @@ class TherapistsController < ApplicationController
   #top three categories, and p[1] is an array containing
   #therapist ids in descending order of relevance
   def getCategoriesAndTherapists(query)
-    f = open("|python ../nlp/FindTherapistsByQuery.py " + query)
+    f = open("|python ../nlp/FindTherapistsByQuery.py #{query}")
     output = f.read().strip().gsub("\n", ", ").split(", ")
     categories = Array.new()
 
-    for x in output[0..2] do
+    output[0..2].each do |x|
       x.sub!('[', '')
       x.sub!(']', '')
       categories << x
     end
 
     therapists = Array.new()
-    for x in output[3..-1] do
+    output[3..-1].each do |x|
       x.sub!('[', '')
       x.sub!(']', '')
       therapists << x.to_i
     end
     return [categories,therapists]
-
   end
 
   private
