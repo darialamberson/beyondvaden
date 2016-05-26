@@ -12,11 +12,11 @@ def rank(categoryAndWeight):
 
 	dir_path = os.path.dirname(os.path.abspath(__file__))
 	# full_path = os.path.join(dir_path, '../database.db')
-	full_path = os.path.join(dir_path, '../webapp/db/development.sqlite3')
+	full_path = os.path.join(dir_path, '../Theratree/db/development.sqlite3')
 	conn = sqlite3.connect(full_path)
 	cur = conn.cursor()
 
-	cur.execute('SELECT id from therapists')
+	cur.execute('SELECT therapist_id from therapists')
 	ids = cur.fetchall()
 
 	scores = {}
