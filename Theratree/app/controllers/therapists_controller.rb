@@ -73,14 +73,22 @@ class TherapistsController < ApplicationController
   #top three categories, and p[1] is an array containing
   #therapist ids in descending order of relevance
   def getCategoriesAndTherapists(query)
+    puts "*********** query " + query
+    query = query.gsub("'", "")
+    puts "query gsub " + query
+
     f = open("|python ../nlp/FindTherapistsByQuery.py #{query}")
-    output = f.read().strip().gsub("\n", ", ").gsub(/'"/, '').split(", ")
+    output = f.read().strip().gsub("\n", ", ").split(", ")
     categories = Array.new()
 
     output[0..2].each do |x|
       x.sub!('[', '')
       x.sub!(']', '')
       categories << x
+    end
+    puts "*********** categories" 
+    categories.each do |c|
+      puts c
     end
 
     therapists = Array.new()

@@ -3,6 +3,8 @@
 #top three categories, and p[1] is an array containing 
 #therapist ids in descending order of relevance
 def getCategoriesAndTherapists(query)
+	query = query.gsub("'", "")
+
 	f = open("|python ../nlp/FindTherapistsByQuery.py " + query)
 	output = f.read().strip().gsub("\n", ", ").split(", ")
 	categories = Array.new()
