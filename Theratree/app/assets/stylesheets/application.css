@@ -14,6 +14,10 @@
  *= require_self
  */
 
+#therapist-summary {
+    margin-top: 8px;
+}
+
 .sidebar-nav {
     padding: 9px 0;
 }

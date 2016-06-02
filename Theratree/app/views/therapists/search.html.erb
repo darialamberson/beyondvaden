@@ -5,8 +5,9 @@
 <!--to display the therapist-->
 <div class="row-fluid">
   <div class="span10">
+    <% puts @search_therapists %>
     <% @search_therapists.each do |therapist| %>
-      <% therapist = @therapists.find_by_id(therapist)%>
+      <% therapist = @therapists.find_by therapist_id: therapist%>
       <div class="small-hero-unit">
         <h3><%= therapist.name %></h3>
         <!--<h3>@therapist.title</h3>-->
