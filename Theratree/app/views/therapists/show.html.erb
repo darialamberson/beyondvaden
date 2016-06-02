@@ -7,22 +7,19 @@
         <li>
           <%= image_tag "jean.jpg", class: "img-rounded" %>
         </li>
-        <li class="nav-header">Quick Information</li>
-        <li class="active"><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
-        <li class="nav-header">Useful Links</li>
-        <li><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
-        <li class="nav-header">Rollin' With the Homiezzz</li>
-        <li><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
+        <li class="nav-header">Contact</li>
+        <li>
+          <% if @therapist.phone.empty? %>
+            <li>No contact provided.</li>
+          <% else %>
+            <b>Phone</b>: <%= @therapist.phone %>
+          <% end %>
+        </li>
+        <li class="nav-header">Location</li>
+        <% @therapist.th_location.each do |l| %>
+          <li><%= l.addr %></li>
+          <li><%= l.zip %>, CA</li>
+        <% end %>        
       </ul>
     </div>
   </div>
@@ -30,31 +27,36 @@
     <div class="hero-unit">
       <h1><%= @therapist.name %></h1>
       <!--<h3>@therapist.title</h3>-->
-      <p><%= @therapist.summary %></p>
+      <p id="therapist-summary"><%= @therapist.summary %></p>
     </div>
       <div class="row-fluid">
         <div class="span4">
-          <h2>About</h2>
+          <h2>Contact</h2>
           <ul class="therapist-list">
-            <li><b>Phone</b>: <%= @therapist.phone %></li>
-            <li><b>Qualifications</b>: </li>
-            <li><b>Age:</b> </li>
-            <li><b>Ethnicity:</b> </li>
+            <% if @therapist.phone.empty? %>
+              <li>No contact provided.</li>
+            <% else %>
+              <b>Phone</b>: <%= @therapist.phone %>
+            <% end %>
           </ul>
         </div>
         <div class="span4">
           <h2>Location</h2>
           <% @therapist.th_location.each do |l| %>
             <p><%= l.addr %></p>
-            <p><%= l.zip %></p>
+            <p><%= l.zip %>, CA</p>
           <% end %>
           <p><a class="btn" href="#">Show Map &raquo;</a></p>
         </div>
         <div class="span4">
           <h2>Specialties</h2>
           <ul class="therapist-list">
-          <% @therapist.th_specialty.each do |s| %>
-            <li><%= s.specialty %></li>
+          <% if @therapist.th_specialty.empty? %>
+            <li>No specialty provided.</li>
+          <% else %>
+            <% @therapist.th_specialty.each do |s| %>
+              <li><%= s.specialty %></li>
+            <% end %>
           <% end %>
           </ul>
         </div>
@@ -63,20 +65,32 @@
         <div class="span4">
           <h2>Treatment Approach</h2>
           <ul class="therapist-list">
-          <% @therapist.th_treatment_orientation.each do |t| %>
-            <li><%= t.orientation %></li>
-          <% end %>
-          <% @therapist.th_modality.each do |m| %>
-            <li><%= m.modality %></li>
-          <% end %>
+            <% if @therapist.th_treatment_orientation.empty? %>
+              <li>No treatment approaches provided.</li>
+            <% else %>
+              <% @therapist.th_treatment_orientation.each do |t| %>
+                <li><%= t.orientation %></li>
+              <% end %>
+            <% end %>
+            <% if @therapist.th_modality.empty? %>
+              <li>No modalities provided.</li>
+            <% else %>
+              <% @therapist.th_modality.each do |m| %>
+                <li><%= m.modality %></li>
+              <% end %>
+            <% end %>
           </ul>
         </div>
         <div class="span4">
-          <h2>Finances</h2>
+          <h2>Insurance</h2>
           <ul class="therapist-list">
-          <% @therapist.th_insurance.each do |i| %>
-            <li><%= i.insurance %></li>
-          <% end %>
+            <% if @therapist.th_insurance.empty? %>
+              <li>No insurance information provided.</li>
+            <% else %>
+              <% @therapist.th_insurance.each do |i| %>
+                <li><%= i.insurance %></li>
+              <% end %>
+            <% end %>
           </ul>
         </div>
       </div>
