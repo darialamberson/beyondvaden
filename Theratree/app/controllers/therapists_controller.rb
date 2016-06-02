@@ -25,8 +25,8 @@ class TherapistsController < ApplicationController
   end
 
   def search
-    # @search_therapists = getCategoriesAndTherapists(params[:query])
-    @search_therapists = Therapist.all
+    @search_therapists = getCategoriesAndTherapists(params[:query]).last
+    @therapists = Therapist.all
   end
 
   # POST /therapists
@@ -74,7 +74,7 @@ class TherapistsController < ApplicationController
   #therapist ids in descending order of relevance
   def getCategoriesAndTherapists(query)
     f = open("|python ../nlp/FindTherapistsByQuery.py #{query}")
-    output = f.read().strip().gsub("\n", ", ").split(", ")
+    output = f.read().strip().gsub("\n", ", ").gsub(/'"/, '').split(", ")
     categories = Array.new()
 
     output[0..2].each do |x|
