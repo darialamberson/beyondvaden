@@ -52,8 +52,8 @@
             <% @therapist.th_location.each do |l| %>
               <p><%= l.addr %></p>
               <p><%= l.zip %>, CA</p>
+              <p><a class="btn" target="_blank" href="http://maps.google.com/?q=<%= l.addr + ' ' + l.zip.to_s %>">Show Map &raquo;</a></p>
             <% end %>
-            <p><a class="btn" href="#">Show Map &raquo;</a></p>
           <% end %>
         </div>
         <div class="span4">
