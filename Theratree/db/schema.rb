@@ -143,3 +143,12 @@ ActiveRecord::Schema.define(version: 20160607112436) do
   end
 
 end
+
+# <!-- To add: -->
+# <!-- Categories -->
+# <!-- Issues --> # problem! Not showing up anything
+# <!-- Languages -->
+# <!-- Mental Health Focus -->
+# <!-- Sexuality Focus -->
+
+
