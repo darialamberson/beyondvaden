@@ -9,4 +9,5 @@ class Therapist < ActiveRecord::Base
   has_many :th_sexuality_focus
   has_many :th_specialty
   has_many :th_treatment_orientation
+  has_one  :th_photo
 end

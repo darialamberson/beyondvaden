@@ -5,21 +5,25 @@
     <div class="well sidebar-nav">
       <ul class="nav nav-list">
         <li>
-          <%= image_tag "jean.jpg", class: "img-rounded" %>
+          <%= image_tag @therapist.th_photo.img_url, class: "img-rounded" %>
         </li>
         <li class="nav-header">Contact</li>
         <li>
           <% if @therapist.phone.empty? %>
             <li>No contact provided.</li>
           <% else %>
-            <b>Phone</b>: <%= @therapist.phone %>
+            <p>Phone: <%= @therapist.phone %></p>
           <% end %>
         </li>
         <li class="nav-header">Location</li>
-        <% @therapist.th_location.each do |l| %>
-          <li><%= l.addr %></li>
-          <li><%= l.zip %>, CA</li>
-        <% end %>        
+        <% if @therapist.th_location.empty? %>
+            <p>No location available.</p>
+        <% else %>
+          <% @therapist.th_location.each do |l| %>
+            <li><%= l.addr %></li>
+            <li><%= l.zip %>, CA</li>
+          <% end %>
+        <% end %>
       </ul>
     </div>
   </div>
@@ -34,19 +38,23 @@
           <h2>Contact</h2>
           <ul class="therapist-list">
             <% if @therapist.phone.empty? %>
-              <li>No contact provided.</li>
+              <li>No contact information.</li>
             <% else %>
-              <b>Phone</b>: <%= @therapist.phone %>
+              <p>Phone: <%= @therapist.phone %></p>
             <% end %>
           </ul>
         </div>
         <div class="span4">
           <h2>Location</h2>
-          <% @therapist.th_location.each do |l| %>
-            <p><%= l.addr %></p>
-            <p><%= l.zip %>, CA</p>
+          <% if @therapist.th_location.empty? %>
+            <p>No location available.</p>
+          <% else %>
+            <% @therapist.th_location.each do |l| %>
+              <p><%= l.addr %></p>
+              <p><%= l.zip %>, CA</p>
+              <p><a class="btn" target="_blank" href="http://maps.google.com/?q=<%= l.addr + ' ' + l.zip.to_s %>">Show Map &raquo;</a></p>
+            <% end %>
           <% end %>
-          <p><a class="btn" href="#">Show Map &raquo;</a></p>
         </div>
         <div class="span4">
           <h2>Specialties</h2>
@@ -66,14 +74,14 @@
           <h2>Treatment Approach</h2>
           <ul class="therapist-list">
             <% if @therapist.th_treatment_orientation.empty? %>
-              <li>No treatment approaches provided.</li>
+              <li>No treatment approach information.</li>
             <% else %>
               <% @therapist.th_treatment_orientation.each do |t| %>
                 <li><%= t.orientation %></li>
               <% end %>
             <% end %>
             <% if @therapist.th_modality.empty? %>
-              <li>No modalities provided.</li>
+              <li>No modalities information.</li>
             <% else %>
               <% @therapist.th_modality.each do |m| %>
                 <li><%= m.modality %></li>
@@ -85,7 +93,7 @@
           <h2>Insurance</h2>
           <ul class="therapist-list">
             <% if @therapist.th_insurance.empty? %>
-              <li>No insurance information provided.</li>
+              <li>No insurance information.</li>
             <% else %>
               <% @therapist.th_insurance.each do |i| %>
                 <li><%= i.insurance %></li>

@@ -6,6 +6,12 @@ Rails.application.routes.draw do
 
   get 'search' => 'therapists#search'
   get 'home' => 'therapists#home'
+  get 'therapists' => 'therapists#show'
+
+  root :to => 'therapists#home'
+
+  # map.connect '/therapists/', :controller => 'therapists', :action => 'show'
+
   # map.search 'search', :controller => 'therapists'
 
 
