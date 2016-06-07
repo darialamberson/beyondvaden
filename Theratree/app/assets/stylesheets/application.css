@@ -14,10 +14,14 @@
  *= require_self
  */
 
+html {
+    overflow: hidden;
+}
+
 body {
     background: #021a4d;
     padding-top: 60px;
-    padding-bottom: 40px;
+    padding-bottom: 80px;
 }
 
 body.home {
@@ -122,7 +126,7 @@ body {
 }
 
 .sidebar-nav {
-    padding: 13% 0;
+    padding: 13% 0 3% 0;
 }
 
 @media (max-width: 980px) {
@@ -232,6 +236,19 @@ li {
     background-image: url("../images/unchecked-checkbox.png");
 }
 
+table td {
+    text-align: left;
+}
+
+td p {
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+td li {
+    list-style-type: disc;
+}
+
 .checked .check {
     background-image: url("../images/checked-checkbox.png");
 }
@@ -253,8 +270,7 @@ li {
 }
 
 table a:link {
-    color: #666;
-    font-weight: bold;
+    font-size: 16px;
     text-decoration:none;
 }
 table a:visited {
@@ -262,18 +278,14 @@ table a:visited {
     font-weight:bold;
     text-decoration:none;
 }
-table a:active,
-table a:hover {
-    color: #bd5a35;
-    text-decoration:underline;
-}
+
 table {
+    margin: 0 auto;
     font-family:Arial, Helvetica, sans-serif;
     color:#666;
     font-size:12px;
     text-shadow: 1px 1px 0px #fff;
     background:#eaebec;
-    margin:20px;
     border:#ccc 1px solid;
 
     -moz-border-radius:3px;
