@@ -26,9 +26,11 @@ class TherapistsController < ApplicationController
 
   def search
     @therapists = Therapist.all
+    @output  = getCategoriesAndTherapists(params[:query])
     params[:query] ?
-        @search_therapists = getCategoriesAndTherapists(params[:query]).last :
+        @search_therapists = @output.last :
         @search_therapists = @therapists
+    @concerns = @output.first
   end
 
   # POST /therapists
