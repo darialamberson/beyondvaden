@@ -14,6 +14,50 @@
  *= require_self
  */
 
+body.home {
+    background: #137DCF;
+    text-align: center;
+}
+
+
+p.introduction {
+    font-size: 40px;
+    font-family: 'Alike', Futura, serif;
+    padding: 150px;
+}
+
+textarea {
+    width: 600px;
+    height: 120px;
+    border-top: 3px solid black;
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(pink), to(transparent));
+    background-image: -webkit-linear-gradient(green, transparent);
+    background-image:
+      -moz-linear-gradient(black, transparent),
+      -moz-linear-gradient(white, transparent);
+    background-image:
+      -o-linear-gradient(blue, transparent),
+      -o-linear-gradient(yellow, transparent);
+    background-image: 
+      linear-gradient(red, transparent),
+      linear-gradient(purple, transparent);
+    -moz-background-size: 3px 100%;
+    background-size: 10px 100%;
+    background-position: 0 0, 100% 0;
+    background-repeat: no-repeat; 
+    padding: 5px;
+    color: solid black;
+    font-family: Tahoma, sans-serif;
+    background-color: #137DCF;
+}
+
+input {
+    background: #EBFFFF;
+    padding: 5px;
+    margin: 15px 0 10px 0;
+}
+}
+
 #therapist-summary {
     margin-top: 8px;
 }
