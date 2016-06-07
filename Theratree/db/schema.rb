@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160517224015) do
+ActiveRecord::Schema.define(version: 20160607112436) do
 
   create_table "th_categories", id: false, force: :cascade do |t|
     t.integer  "therapist_id"
@@ -91,6 +91,12 @@ ActiveRecord::Schema.define(version: 20160517224015) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
+
+  create_table "th_photos", primary_key: "therapist_id", force: :cascade do |t|
+    t.text "img_url"
+  end
+
+  add_index "th_photos", ["therapist_id"], name: "sqlite_autoindex_th_photos_1", unique: true
 
   create_table "th_sexuality_focus", id: false, force: :cascade do |t|
     t.integer  "therapist_id"

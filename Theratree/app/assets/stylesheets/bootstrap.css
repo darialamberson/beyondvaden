@@ -317,6 +317,11 @@ img {
 }
 .img-rounded {
   border-radius: 6px;
+  max-width: 100%;
+  min-width: 75%;
+  margin: auto;
+  display: block;
+  margin-bottom: 30px;
 }
 .img-thumbnail {
   padding: 4px;
