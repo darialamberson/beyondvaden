@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Great! Here are some therapists we think you should check out.</h1>
+<p>Here are some therapists we think you should check out, ordered by relevance to your concerns.</p>
 
 <!--to display the therapist-->
 <div class="row-fluid">
@@ -9,10 +9,9 @@
     <% @search_therapists.each do |therapist| %>
       <% therapist = @therapists.find_by therapist_id: therapist%>
       <div class="small-hero-unit">
-        <h3><%= therapist.name %></h3>
+        <h3><%= link_to therapist.name, therapist, id: therapist.therapist_id %></h3>
         <!--<h3>@therapist.title</h3>-->
         <p><%= therapist.phone %></p>
-        <p><%= link_to 'Show', therapist, id: therapist.therapist_id %></p>
       </div>
     <% end %>
   </div>

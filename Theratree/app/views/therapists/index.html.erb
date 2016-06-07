@@ -1,11 +1,8 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Listing Therapists</h1>
-
 <table>
   <thead>
     <tr>
-      <th>Pt</th>
       <th>Name</th>
       <th>Summary</th>
       <th>Phone</th>
@@ -16,7 +13,6 @@
   <tbody>
     <% @therapists.each do |therapist| %>
       <tr>
-        <td><%= therapist.pt_id %></td>
         <td><%= therapist.name %></td>
         <td><%= therapist.summary %></td>
         <td><%= therapist.phone %></td>
