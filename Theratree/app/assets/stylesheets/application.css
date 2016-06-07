@@ -261,6 +261,10 @@ ul li {
     list-style-type: disc;
 }
 
+.grid ul li {
+    list-style-type: none;
+}
+
 .checked .check {
     background-image: url("../images/checked-checkbox.png");
 }
