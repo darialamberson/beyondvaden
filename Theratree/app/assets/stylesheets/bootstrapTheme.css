@@ -236,9 +236,9 @@ a:focus {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 .img-circle {
-  -webkit-border-radius: 500px;
-  -moz-border-radius: 500px;
-  border-radius: 500px;
+  -webkit-border-radius: 300px;
+  -moz-border-radius: 300px;
+  border-radius: 300px;
 }
 .row {
   margin-left: -20px;
@@ -2701,7 +2701,7 @@ button.close {
   vertical-align: middle;
   cursor: pointer;
   background-color: #f3f3f3;
-  color: #3fbf79;
+  color: #34495e;
   *background-color: #f3f3f3;
   /* Darken IE7 buttons by default so they stand out more given they won't have borders */
 
@@ -2718,7 +2718,7 @@ button.close {
 .btn.active,
 .btn.disabled,
 .btn[disabled] {
-  color: #3fbf79;
+  color: #3be6c4;
   background-color: #e6e6e6;
   *background-color: #d9d9d9;
 }

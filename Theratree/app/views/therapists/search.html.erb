@@ -1,18 +1,22 @@
 <p id="notice"><%= notice %></p>
 
-<p>Here are some therapists we think you should check out, ordered by relevance to your concerns.</p>
+<h2 class="result_header">Here are some therapists we think you should check out, ordered by relevance to your concerns.</h2>
 
 <!--to display the therapist-->
 <div class="row-fluid">
-  <div class="span10">
-    <% puts @search_therapists %>
-    <% @search_therapists.each do |therapist| %>
-      <% therapist = @therapists.find_by therapist_id: therapist%>
-      <div class="small-hero-unit">
-        <h3><%= link_to therapist.name, therapist, id: therapist.therapist_id %></h3>
-        <!--<h3>@therapist.title</h3>-->
-        <p><%= therapist.phone %></p>
-      </div>
-    <% end %>
-  </div>
+  <ul>
+  <% puts @search_therapists %>
+  <% @search_therapists.each do |therapist| %>
+    <% therapist = @therapists.find_by therapist_id: therapist%>
+    <!--<div class="span3">-->
+      <li>
+        <div class="small-hero-unit">
+          <h4><%= link_to therapist.name, therapist, id: therapist.therapist_id %></h4>
+          <%= image_tag therapist.th_photo.img_url, class: "img-circle" %>
+          <p><%= therapist.phone %></p>
+        </div>
+      </li>
+    <!--</div>-->
+  <% end %>
+  </ul>
 </div>

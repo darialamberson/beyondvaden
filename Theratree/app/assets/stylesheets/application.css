@@ -14,23 +14,30 @@
  *= require_self
  */
 
+body {
+    background: #021a4d;
+}
+
 body.home {
-    background: #137DCF;
     text-align: center;
 }
 
+body.home p {
+    color: #3be6c4;
+}
 
-p.introduction {
+#introduction {
     font-size: 40px;
-    font-family: 'Alike', Futura, serif;
-    padding-bottom: 130px;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    padding-bottom: 105px;
     padding-top: 60px;
+    color: #ffe0cc;
 }
 
 textarea {
     width: 600px;
-    height: 120px;
-    border-top: 5px solid #EBFFFF;
+    height: 200px;
+    border-top: 3px solid #EBFFFF;
     border-bottom: none;
     border-left: none;
     border-right: none;
@@ -39,21 +46,24 @@ textarea {
       linear-gradient(#EBFFFF, transparent),
       linear-gradient(#EBFFFF, transparent);
     -moz-background-size: 30px 100%;
-    background-size: 5px 100%;
+    background-size: 3px 100%;
     background-position: 0 0, 100% 0;
     background-repeat: no-repeat; 
     padding: 20px;
     margin-top: 30px;
-    font-size: 20px;
-    font-family: Tahoma, sans-serif;
-    background-color: #137DCF;
+    font-size: 17px;
+    color:
+    font-family: 'Slabo 27px', serif;
+    letter-spacing: 1px;
+    color: azure;
+    background-color: #021a4d;
     resize: vertical;
 }
 
 textarea:focus {
     width: 600px;
-    height: 120px;
-    border-top: 5px solid #EBFFFF;
+    height: 200px;
+    border-top: 3px solid #EBFFFF;
     border-bottom: none;
     border-left: none;
     border-right: none;
@@ -62,14 +72,16 @@ textarea:focus {
       linear-gradient(#EBFFFF, transparent),
       linear-gradient(#EBFFFF, transparent);
     -moz-background-size: 30px 100%;
-    background-size: 5px 100%;
+    background-size: 3px 100%;
     background-position: 0 0, 100% 0;
     background-repeat: no-repeat; 
     padding: 20px;
     margin-top: 30px;
-    font-size: 20px;
-    font-family: Tahoma, sans-serif;
-    background-color: #137DCF;
+    font-size: 17px;
+    font-family: 'Slabo 27px', serif;
+    letter-spacing: 1px;
+    color: azure;
+    background-color: #021a4d;
     resize: vertical;
 }
 
@@ -77,9 +89,12 @@ input {
     background: #EBFFFF;
     padding: 5px;
     margin: 15px 0 10px 0;
-    font-family: Tahoma, sans-serif;
+    font-family: 'Slabo 27px', serif;
+    font-size: 17px;
+    letter-spacing: 1px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
+    /*color: azure;*/
     border: none;
 }
 
@@ -88,7 +103,7 @@ input {
 }
 
 body {
-    background-color: #137DCF;
+    background-color: #021a4d;
     font-family: 'Slabo 27px', serif;
     letter-spacing: 1px;
 }
@@ -127,7 +142,7 @@ h1, h2, h3 {
     font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 a {
-    color: #ffe0cc;
+    color: #34495e;
     
 }
 
@@ -138,11 +153,54 @@ h2 {
 }
 
 p {
-    color: black;
+    color: #3be6c4;
 }
 
 li {
-    color: black;
+    color: #3be6c4;
+}
+
+.small-hero-unit {
+    position: relative;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: 200;
+    line-height: 33px;
+    width: 162px;
+    color: inherit;
+    background-color: #eeeeee;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    box-shadow:  -1px 1px #3be6c4,
+    -1px 1px #44ddcc,
+    -2px 2px #55ccdd,
+    -3px 3px #66bbee;
+    left: 0;
+    display: block;
+    float: left;
+    margin: 0 20px 20px 0;
+    min-height: 300px;
+}
+
+.small-hero-unit h4 {
+    color: #34495e;
+}
+
+.small-hero-unit p {
+    position: absolute;
+    bottom: 0;
+}
+
+.small-hero-unit img {
+    position: absolute;
+    bottom: 60px;
+    max-width: 120px;
+}
+
+.result_header {
+    margin-bottom: 40px;
+    margin-top: 30px;
 }
 
 #search-enter {
