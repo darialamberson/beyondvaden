@@ -2,14 +2,16 @@
 
 <body class="home">
 	<p class="introduction">
-		We'll help you find someone. 
-	</div>
-		Tell us what's on your mind.
+		We'll help you find someone who can help. 
 	</p>
+		<p> Tell us about what's on your mind so we can find you a relevant therapist in the area. </p>
+
+		<p> Feel free to write naturally, or simply to list keywords. </p>
+
 	<div>
 		<%= form_tag url_for(controller: 'therapists', action: 'search'), method: 'get' do %>
 		    <div> <%= text_area_tag(:query) %> </div>
-		    <div class="submit_tag"> <%= submit_tag("Go") %> </div>
+		    <div class="submit_tag"> <%= submit_tag("search") %> </div>
 		<% end %>
 	</div>
 </body>

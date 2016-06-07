@@ -23,39 +23,64 @@ body.home {
 p.introduction {
     font-size: 40px;
     font-family: 'Alike', Futura, serif;
-    padding: 150px;
+    padding-bottom: 130px;
+    padding-top: 60px;
 }
 
 textarea {
     width: 600px;
     height: 120px;
-    border-top: 3px solid black;
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(pink), to(transparent));
-    background-image: -webkit-linear-gradient(green, transparent);
-    background-image:
-      -moz-linear-gradient(black, transparent),
-      -moz-linear-gradient(white, transparent);
-    background-image:
-      -o-linear-gradient(blue, transparent),
-      -o-linear-gradient(yellow, transparent);
+    border-top: 5px solid #EBFFFF;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    outline: none;
     background-image: 
-      linear-gradient(red, transparent),
-      linear-gradient(purple, transparent);
-    -moz-background-size: 3px 100%;
-    background-size: 10px 100%;
+      linear-gradient(#EBFFFF, transparent),
+      linear-gradient(#EBFFFF, transparent);
+    -moz-background-size: 30px 100%;
+    background-size: 5px 100%;
     background-position: 0 0, 100% 0;
     background-repeat: no-repeat; 
-    padding: 5px;
-    color: solid black;
+    padding: 20px;
+    margin-top: 30px;
+    font-size: 20px;
     font-family: Tahoma, sans-serif;
     background-color: #137DCF;
+    resize: vertical;
+}
+
+textarea:focus {
+    width: 600px;
+    height: 120px;
+    border-top: 5px solid #EBFFFF;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    outline: none;
+    background-image: 
+      linear-gradient(#EBFFFF, transparent),
+      linear-gradient(#EBFFFF, transparent);
+    -moz-background-size: 30px 100%;
+    background-size: 5px 100%;
+    background-position: 0 0, 100% 0;
+    background-repeat: no-repeat; 
+    padding: 20px;
+    margin-top: 30px;
+    font-size: 20px;
+    font-family: Tahoma, sans-serif;
+    background-color: #137DCF;
+    resize: vertical;
 }
 
 input {
     background: #EBFFFF;
     padding: 5px;
     margin: 15px 0 10px 0;
-}
+    font-family: Tahoma, sans-serif;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border: none;
 }
 
 #therapist-summary {
