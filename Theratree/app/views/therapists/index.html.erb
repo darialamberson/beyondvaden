@@ -6,6 +6,7 @@
       <th>Name</th>
       <th>Location</th>
       <th>Specialties</th>
+      <th>Insurance</th>
       <th>Phone</th>
     </tr>
   </thead>
@@ -35,7 +36,9 @@
             <td>No insurance information available.</td>
         <% else %>
             <td>
-              <p><%= therapist.th_insurance.first.insurance %></p>
+              <% therapist.th_insurance.each do |i| %>
+                  <li><%= i.insurance %></li>
+              <% end %>
             </td>
         <% end %>
         <td><%= therapist.phone %></td>

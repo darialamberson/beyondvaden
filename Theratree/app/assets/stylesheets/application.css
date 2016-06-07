@@ -257,8 +257,27 @@ td li {
     list-style-type: disc;
 }
 
+ul li {
+    list-style-type: disc;
+}
+
 .checked .check {
     background-image: url("../images/checked-checkbox.png");
+}
+
+.well-btn {
+    background-color: #34495e;
+    color: #f3f3f3;
+}
+.well-btn:hover,
+.well-btn:focus,
+.well-btn:active,
+.well-btn.active,
+.well-btn.disabled,
+.well-btn[disabled] {
+    color: #3be6c4;
+    background-color: #34495e;
+    *background-color: #34495e;
 }
 
 .checked {
