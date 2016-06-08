@@ -9,14 +9,14 @@
         <li class="nav-header">Contact</li>
         <li>
           <% if @therapist.phone.empty? %>
-            <p>No contact provided.</p>
+            <li>No contact provided.</li>
           <% else %>
             <p id="phone-column">Phone: <%= number_to_phone(@therapist.phone, area_code: true) %></p>
           <% end %>
         </li>
         <li class="nav-header">Location</li>
         <% if @therapist.th_location.empty? %>
-            <p>No location available.</p>
+            <li>No location available.</li>
         <% else %>
           <% @therapist.th_location.each do |l| %>
             <li><%= l.addr %></li>
@@ -26,7 +26,7 @@
         <% end %>
         <li class="nav-header">Specialties</li>
         <% if @therapist.th_specialty.empty? %>
-            <p>No specialties available.</p>
+            <li>No specialties available.</li>
         <% else %>
             <% @therapist.th_specialty.each do |s| %>
                 <li><%= s.specialty %></li>
