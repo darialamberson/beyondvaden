@@ -21,6 +21,9 @@ class TherapistsController < ApplicationController
   def edit
   end
 
+  def resources
+  end
+
   def home
   end
 
