@@ -9,9 +9,9 @@
         <li class="nav-header">Contact</li>
         <li>
           <% if @therapist.phone.empty? %>
-            <li>No contact provided.</li>
+            <p>No contact provided.</p>
           <% else %>
-            <p>Phone: <%= @therapist.phone %></p>
+            <p id="phone-column">Phone: <%= number_to_phone(@therapist.phone, area_code: true) %></p>
           <% end %>
         </li>
         <li class="nav-header">Location</li>
@@ -53,7 +53,7 @@
           <h2>Mental Health Focus</h2>
           <ul class="therapist-list">
             <% if @therapist.th_mental_health_focus.empty? %>
-                <li>No therapist mental health focus provided.</li>
+                <p>No therapist mental health focus provided.</p>
             <% else %>
                 <% @therapist.th_mental_health_focus.each do |mhf| %>
                     <li><%= mhf.focus %></li>
@@ -64,7 +64,7 @@
           <h2>Categories</h2>
           <ul class="therapist-list">
             <% if @therapist.th_category.empty? %>
-                <li>No therapist category provided.</li>
+                <p>No therapist categories provided.</p>
             <% else %>
                 <% @therapist.th_category.each do |c| %>
                     <li><%= c.category %></li>
@@ -75,7 +75,7 @@
           <h2>Languages</h2>
           <ul class="therapist-list">
             <% if @therapist.th_language.empty? %>
-                <li>No therapist languages provided.</li>
+                <p>No therapist languages provided.</p>
             <% else %>
                 <% @therapist.th_language.each do |l| %>
                     <li><%= l.language %></li>
@@ -87,7 +87,7 @@
           <h2>Issues</h2>
           <ul class="therapist-list">
             <% if @therapist.th_issue.empty? %>
-                <li>No therapist issues provided.</li>
+                <p>No therapist issues provided.</p>
             <% else %>
                 <% @therapist.th_issue.each do |i| %>
                     <li><%= i.issue %></li>
@@ -101,14 +101,14 @@
           <h2>Treatment Approach</h2>
           <ul class="therapist-list">
             <% if @therapist.th_treatment_orientation.empty? %>
-              <li>No treatment approach information.</li>
+              <p>No treatment approach information.</p>
             <% else %>
               <% @therapist.th_treatment_orientation.each do |t| %>
                 <li><%= t.orientation %></li>
               <% end %>
             <% end %>
             <% if @therapist.th_modality.empty? %>
-              <li>No modalities information.</li>
+              <p>No modalities information.</p>
             <% else %>
               <% @therapist.th_modality.each do |m| %>
                 <li><%= m.modality %></li>
@@ -119,7 +119,7 @@
           <h2>Sexuality Focus</h2>
           <ul class="therapist-list">
             <% if @therapist.th_sexuality_focus.empty? %>
-              <li>No therapist sexuality focus provided.</li>
+              <p>No therapist sexuality focus provided.</p>
             <% else %>
               <% @therapist.th_sexuality_focus.each do |sf| %>
                 <li><%= sf.sexuality %></li>

@@ -4495,6 +4495,7 @@ a.thumbnail.active {
   background-color: #e74c3c;
   border-color: #e74c3c;
   color: #ffffff;
+  font-size: 23px;
 }
 .alert-danger hr {
   border-top-color: #e43725;

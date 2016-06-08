@@ -19,7 +19,7 @@
         <div class="small-hero-unit">
           <h4><%= link_to therapist.name, therapist, id: therapist.therapist_id %></h4>
           <%= image_tag therapist.th_photo.img_url, class: "img-circle" %>
-          <p><%= therapist.phone %></p>
+          <p id="phone-column"><%= number_to_phone(therapist.phone, area_code: true) %></p>
         </div>
       </li>
   <% end %>

@@ -126,7 +126,7 @@ body {
 }
 
 .sidebar-nav {
-    padding: 13% 0 3% 0;
+    padding: 13% 0 6% 0;
 }
 
 @media (max-width: 980px) {
@@ -197,7 +197,7 @@ li {
     position: absolute;
     bottom: 0;
     color: slategray;
-    right: 0;
+    right: 3px;
     left: 0;
     text-align: center;
 }
@@ -217,7 +217,7 @@ li {
 .result-text{
     margin-bottom: 40px;
     color: #3be6c4;
-    font-size: 20px;
+    font-size: 25px;
 }
 
 #search-enter {
@@ -266,10 +266,17 @@ td li {
 
 ul li {
     list-style-type: disc;
+    color: #3be6c4;
+    margin-left: 15px;
 }
 
 .grid ul li {
     list-style-type: none;
+}
+
+ul p {
+    list-style-type: none;
+    color: #3be6c4;
 }
 
 .checked .check {
@@ -279,6 +286,7 @@ ul li {
 .well-btn {
     background-color: #34495e;
     color: #f3f3f3;
+    margin-left: 15px;
 }
 .well-btn:hover,
 .well-btn:focus,
