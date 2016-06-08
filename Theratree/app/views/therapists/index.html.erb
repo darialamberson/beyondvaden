@@ -41,7 +41,7 @@
               <% end %>
             </td>
         <% end %>
-        <td><%= therapist.phone %></td>
+        <td id="phone-column"><%= number_to_phone(therapist.phone, area_code: true) %></td>
       </tr>
     <% end %>
   </tbody>
