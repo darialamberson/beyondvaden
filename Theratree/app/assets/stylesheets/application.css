@@ -28,8 +28,8 @@ body.home {
     text-align: center;
 }
 
-body.home p {
-    color: #3be6c4;
+body.home {
+    color: #;
 }
 
 #introduction {
@@ -160,6 +160,14 @@ h2 {
 
 p {
     color: #666;
+}
+
+p.resources {
+    color: #ffe0cc;
+}
+
+a.resources {
+    color: #3be6c4;
 }
 
 li {
