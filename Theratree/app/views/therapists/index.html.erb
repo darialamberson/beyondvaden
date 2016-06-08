@@ -16,7 +16,7 @@
       <tr>
         <td><%= link_to therapist.name, therapist, id: therapist.therapist_id %></td>
         <% if therapist.th_location.empty? %>
-            <td>No location provided.</td>
+            <td class="not-found">No location provided.</td>
         <% else %>
             <td>
               <p><%= therapist.th_location.first.addr %></p>
@@ -24,7 +24,7 @@
             </td>
         <% end %>
         <% if therapist.th_specialty.empty? %>
-            <td>No specialties information.</td>
+            <td class="not-found">No specialties information.</td>
         <% else %>
             <td>
               <% therapist.th_specialty.each do |s| %>
@@ -33,7 +33,7 @@
             </td>
         <% end %>
         <% if therapist.th_insurance.empty? %>
-            <td>No insurance information available.</td>
+            <td class="not-found">No insurance information available.</td>
         <% else %>
             <td>
               <% therapist.th_insurance.each do |i| %>

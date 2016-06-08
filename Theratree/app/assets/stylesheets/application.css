@@ -254,10 +254,16 @@ table td {
 td p {
     font-size: 17px;
     margin-bottom: 5px;
+    color: inherit;
 }
 
 td li {
     list-style-type: disc;
+    color: inherit;
+}
+
+.not-found {
+    color: #666;
 }
 
 #phone-column {
@@ -318,18 +324,19 @@ ul p {
 table a:link {
     font-size: 17px;
     text-decoration:none;
+    color: #0e0e0e;
 }
 table a:visited {
-    color: #999999;
+    color: #666;
     font-weight:bold;
     text-decoration:none;
 }
 
 table {
     margin: 0 auto;
-    font-family:Arial, Helvetica, sans-serif;
-    color:#666;
-    font-size:17px;
+    font-family: 'Slabo 27px', serif;
+    color: #0b0b0b;
+    font-size:18px;
     text-shadow: 1px 1px 0px #fff;
     background:#eaebec;
     border:#ccc 1px solid;
