@@ -91,6 +91,12 @@ textarea:focus {
     resize: vertical;
 }
 
+li img {
+    left: auto;
+    right: auto;
+    display: block;
+}
+
 input {
     background: #EBFFFF;
     padding: 5px;
