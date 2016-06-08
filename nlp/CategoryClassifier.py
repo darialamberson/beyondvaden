@@ -31,6 +31,9 @@ class CategoryClassifier(object):
 
 
 	def classify(self, query):
+		if self.isSuicide(query):
+			return [('suicidal ideation', 1), ('depression', .5), ('emotional disturbance', .5)]
+
 		query = "".join(c for c in query if c not in ('!','.',':',',',';','?')).lower()
 		query_words = query.split() 
 		p = PorterStemmer()
@@ -48,6 +51,8 @@ class CategoryClassifier(object):
 			membership_scores.append(cossim)
 		return sorted(zip(self.categories, membership_scores), key=lambda x: x[1], reverse=True)
 
+	def isSuicide(self, query):
+		return "kill myself" in query or "want to die" in query or "never wake up" in query or "end my life" in query or "end it all" in query
 
 	def __createTfidfFiles(self, tf_file, tfidf_file, idf_file):
 		with open(tf_file, 'r') as f:
