@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get 'search' => 'therapists#search'
   get 'home' => 'therapists#home'
   get 'therapists' => 'therapists#show'
+  get 'resources' => 'therapists#resources'
 
   root :to => 'therapists#home'
 
