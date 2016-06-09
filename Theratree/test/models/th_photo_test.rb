@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ThLanguageTest < ActiveSupport::TestCase
+class ThPhotoTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

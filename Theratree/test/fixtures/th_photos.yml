@@ -2,8 +2,8 @@
 
 one:
   therapist_id: 1
-  category: MyText
+  img_url: MyText
 
 two:
   therapist_id: 1
-  category: MyText
+  img_url: MyText
